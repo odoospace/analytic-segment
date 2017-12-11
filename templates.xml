@@ -1,0 +1,109 @@
+<openerp>
+    <data>
+      <!-- BEGIN: analytic segment -->
+      <record id="view_analytic_segment_tree" model="ir.ui.view">
+          <field name="name">analytic_segment.segment.tree</field>
+          <field name="model">analytic_segment.segment</field>
+          <field name="type">tree</field>
+          <field name="arch" type="xml">
+              <tree string="Segments">
+                  <field name="name" />
+                  <field name="type_id" />
+                  <field name="code" />
+                  <field name="level" />
+                  <field name="parent_id" />
+                  <field name="segment" />
+                  <field name="virtual" />
+                  <field name="blocked" />
+                  <field name="child_ids" />
+              </tree>
+          </field>
+        </record>
+
+        <record id="view_analytic_segment_form" model="ir.ui.view">
+            <field name="name">analytic_segment.segment.form</field>
+            <field name="model">analytic_segment.segment</field>
+            <field name="type">form</field>
+            <field name="arch" type="xml">
+                <form string="Segments">
+                    <group cols="2">
+                        <field name="code" />
+                        <field name="name" />
+                        <field name="type_id" />
+                        <field name="parent_id" domain="[('level', '=', level_parent)]"/>
+                        <field name="level" />
+                        <field name="level_parent" attrs="{'invisible': 1}" />
+                        <field name="segment" />
+                        <field name="virtual" />
+                        <field name="blocked" />
+                    </group>
+                </form>
+            </field>
+          </record>
+        <!-- END: analytic segment -->
+
+        <!-- BEGIN: analytic segment type-->
+        <record id="view_analytic_segment_type_tree" model="ir.ui.view">
+            <field name="name">analytic_segment.type.tree</field>
+            <field name="model">analytic_segment.type</field>
+            <field name="type">tree</field>
+            <field name="arch" type="xml">
+                <tree string="Type of segments">
+                    <field name="code" />
+                    <field name="name" />
+                    <field name="level_parent" />
+                    <field name="segment_ids" />
+                </tree>
+            </field>
+        </record>
+
+        <record id="view_analytic_segment_type_form" model="ir.ui.view">
+            <field name="name">analytic_segment.type.form</field>
+            <field name="model">analytic_segment.type</field>
+            <field name="type">form</field>
+            <field name="arch" type="xml">
+                <form string="Type of segments">
+                    <group cols="2">
+                        <field name="code" />
+                        <field name="name" />
+                        <field name="level_parent" />
+                    </group>
+                </form>
+            </field>
+          </record>
+        <!-- END: analytic segment type -->
+
+        <!-- END INHERIT res.users tree  -->
+        <record id="view_account_analytic_account_segment_form" model="ir.ui.view">
+            <field name="name">account.analytic.account.segment</field>
+            <field name="model">account.analytic.account</field>
+            <field name="inherit_id" ref="analytic.view_account_analytic_account_form"/>
+            <field name="arch" type="xml">
+                <field name="manager_id" position="after">
+                    <field name="segment_id"/>
+                    <field name="segment"/>
+                </field>
+            </field>
+        </record>
+        <!-- END INHERIT res.users tree -->
+
+        <!-- BEGIN: action & menu -->
+        <record model="ir.actions.act_window" id="action_analytic_segment">
+            <field name="name">Analytic segments</field>
+            <field name="res_model">analytic_segment.segment</field>
+            <field name="view_mode">tree,form</field>
+        </record>
+        <record model="ir.actions.act_window" id="action_analytic_segment_type">
+            <field name="name">Type of segments</field>
+            <field name="res_model">analytic_segment.type</field>
+            <field name="view_mode">tree,form</field>
+        </record>
+        <menuitem id="menu_analytic_segment" name="Analytic segments"
+            parent="universal_account.menu_finance_territorial_segments"
+            sequence="30" action="action_analytic_segment"/>
+          <menuitem id="menu_analytic_segment_type" name="Type of segments"
+              parent="universal_account.menu_finance_territorial_segments"
+              sequence="40" action="action_analytic_segment_type"/>
+        <!-- END: action & menu -->
+    </data>
+</openerp>
