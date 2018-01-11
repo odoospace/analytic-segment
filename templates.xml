@@ -1,9 +1,9 @@
 <openerp>
     <data>
       <!-- BEGIN: analytic segment -->
-      <record id="view_analytic_segment_tree" model="ir.ui.view">
-          <field name="name">analytic_segment.segment.tree</field>
-          <field name="model">analytic_segment.segment</field>
+      <record id="view_analytic_segment_template_tree" model="ir.ui.view">
+          <field name="name">analytic_segment.template.tree</field>
+          <field name="model">analytic_segment.template</field>
           <field name="type">tree</field>
           <field name="arch" type="xml">
               <tree string="Segments">
@@ -20,9 +20,9 @@
           </field>
         </record>
 
-        <record id="view_analytic_segment_form" model="ir.ui.view">
-            <field name="name">analytic_segment.segment.form</field>
-            <field name="model">analytic_segment.segment</field>
+        <record id="view_analytic_segment_template_form" model="ir.ui.view">
+            <field name="name">analytic_segment.template.form</field>
+            <field name="model">analytic_segment.template</field>
             <field name="type">form</field>
             <field name="arch" type="xml">
                 <form string="Segments">
@@ -56,6 +56,59 @@
                 </tree>
             </field>
         </record>
+        <!-- END: analytic segment type-->
+
+        <!-- BEGIN: analytic segment campaign-->
+        <record id="view_analytic_segment_campaign_tree" model="ir.ui.view">
+            <field name="name">analytic_segment.campaign.tree</field>
+            <field name="model">analytic_segment.campaign</field>
+            <field name="type">tree</field>
+            <field name="arch" type="xml">
+                <tree string="Type of segments">
+                    <field name="code" />
+                    <field name="name" />
+                    <field name="company_id" />
+                    <field name="date_start" />
+                    <field name="date_end" />
+                    <field name="state" />
+                    <field name="segment_top" />
+                    <field name="segment_ids" />
+                </tree>
+            </field>
+        </record>
+        <!-- END: analytic segment campaign-->
+
+        <record id="view_analytic_segment_compaign_form" model="ir.ui.view">
+            <field name="name">analytic_segment.campaign.form</field>
+            <field name="model">analytic_segment.campaign</field>
+            <field name="type">form</field>
+            <field name="arch" type="xml">
+                <form string="Campaigns">
+                    <group>
+                        <field name="code"/>
+                        <field name="name"/>
+                        <field name="company_id"/>
+                        <field name="date_start"/>
+                        <field name="date_end"/>
+                        <field name="state"/>
+                        <field name="segment_top"/>
+                    </group>
+                    <notebook position="inside">
+                        <page string="Segments">
+                        <field name="segment_ids" colspan="4" nolabel="1">
+                            <tree editable="bottom">
+                                <field name="name"/>
+                                <field name="type_id"/>
+                                <field name="segment"/>
+                                <field name="blocked"/>
+                            </tree>
+                        </field>
+                        </page>
+                    </notebook>
+                </form>
+            </field>
+          </record>
+        <!-- END: analytic segment type -->
 
         <record id="view_analytic_segment_type_form" model="ir.ui.view">
             <field name="name">analytic_segment.type.form</field>
@@ -73,7 +126,7 @@
           </record>
         <!-- END: analytic segment type -->
 
-        <!-- END INHERIT res.users tree  -->
+        <!-- BEGIN INHERIT account.analytic.account form  -->
         <record id="view_account_analytic_account_segment_form" model="ir.ui.view">
             <field name="name">account.analytic.account.segment</field>
             <field name="model">account.analytic.account</field>
@@ -85,12 +138,53 @@
                 </field>
             </field>
         </record>
-        <!-- END INHERIT res.users tree -->
+        <!-- END INHERIT account.analytic.account form -->
 
-        <!-- BEGIN: action & menu -->
+        <!-- BEGIN INHERIT base.view_users_form form  -->
+        <record id="view_users_segment_form" model="ir.ui.view">
+            <field name="name">res.users.form</field>
+            <field name="model">res.users</field>
+            <field name="inherit_id" ref="base.view_users_form"/>
+            <field name="arch" type="xml">
+              <notebook position="inside">
+                <page string="Analytic segments">
+                  <field name="segment_ids" colspan="4" nolabel="1" context="{'company_ids': company_ids}">
+                    <tree editable="bottom">
+                      <field name="company_id" domain="[('id', 'in', company_ids[0][2])]"/>
+                      <field name="segment_id"/>
+                    </tree>
+                  </field>
+                </page>
+              </notebook>
+            </field>
+        </record>
+        <!-- END INHERIT base.view_users_form form -->
+
+        <!-- BEGIN INHERIT base.view_users_form form  -->
+        <record id="view_company_segment_form" model="ir.ui.view">
+            <field name="name">res.company.segment.form</field>
+            <field name="model">res.company</field>
+            <field name="inherit_id" ref="base.view_company_form"/>
+            <field name="arch" type="xml">
+              <notebook position="inside">
+                <page string="Analytic segments">
+                  <field name="segment_ids" colspan="4" nolabel="1">
+                    <tree editable="bottom">
+                      <field name="display_name"/>
+                      <field name="segment"/>
+                      <field name="level"/>
+                    </tree>
+                  </field>
+                </page>
+              </notebook>
+            </field>
+        </record>
+        <!-- END INHERIT base.view_users_form form -->
+
+        <!-- BEGIN: action and menu -->
         <record model="ir.actions.act_window" id="action_analytic_segment">
             <field name="name">Analytic segments</field>
-            <field name="res_model">analytic_segment.segment</field>
+            <field name="res_model">analytic_segment.template</field>
             <field name="view_mode">tree,form</field>
         </record>
         <record model="ir.actions.act_window" id="action_analytic_segment_type">
@@ -98,12 +192,20 @@
             <field name="res_model">analytic_segment.type</field>
             <field name="view_mode">tree,form</field>
         </record>
+        <record model="ir.actions.act_window" id="action_analytic_segment_campaign">
+            <field name="name">Campaigns</field>
+            <field name="res_model">analytic_segment.campaign</field>
+            <field name="view_mode">tree,form</field>
+        </record>
         <menuitem id="menu_analytic_segment" name="Analytic segments"
             parent="universal_account.menu_finance_territorial_segments"
             sequence="30" action="action_analytic_segment"/>
-          <menuitem id="menu_analytic_segment_type" name="Type of segments"
-              parent="universal_account.menu_finance_territorial_segments"
-              sequence="40" action="action_analytic_segment_type"/>
+        <menuitem id="menu_analytic_segment_type" name="Type of segments"
+            parent="universal_account.menu_finance_territorial_segments"
+            sequence="40" action="action_analytic_segment_type"/>
+        <menuitem id="menu_analytic_segment_campaign" name="Campaigns"
+            parent="universal_account.menu_finance_territorial_segments"
+            sequence="50" action="action_analytic_segment_campaign"/>
         <!-- END: action & menu -->
     </data>
 </openerp>
