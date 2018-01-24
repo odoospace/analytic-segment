@@ -80,14 +80,25 @@ class analytic_template(models.Model):
             self.segment = '.'.join(newfullcode)
 
     def get_childs(self):
-        """return a list with ids of childrens, grandchildrens, etc."""
-        res = []
+        """return a list with childrens, grandchildrens, etc."""
+        res = [self]
         for obj in self.child_ids:
             res.append(obj)
             more_childs = obj.get_childs() # recursive!
             if more_childs:
                 for child in more_childs:
                     res.append(child)
+        return res
+
+    def get_childs_ids(self):
+        """return a list with ids of childrens, grandchildrens, etc."""
+        res = [self.id]
+        for obj in self.child_ids:
+            res.append(obj.id)
+            more_childs = obj.get_childs() # recursive!
+            if more_childs:
+                for child in more_childs:
+                    res.append(child.id)
         return res
 
     @api.model
@@ -114,7 +125,6 @@ class analytic_template(models.Model):
     child_ids = fields.One2many('analytic_segment.template', 'parent_id')
     # one2manys to core models
     analytic_ids = fields.One2many('account.analytic.account', 'segment_id')
-
     # base
     user_ids = fields.One2many('analytic_segment.user', 'segment_id')
     
@@ -128,7 +138,37 @@ class analytic_segment(models.Model):
 
     @api.multi
     def _is_campaign(self):
-        return self.is_campaign and True or False
+        for obj in self:
+            obj.is_campaign = obj.campaign_id and True or False
+
+    # override this function from template to add 3 if campaign is True
+    @api.depends('parent_id', 'code', 'type_id', 'campaign_id')
+    @api.one
+    def _get_fullcode(self):
+        """recursively get depth level in tree"""
+        # segment is empty for virtual ones
+        if not self.type_id:
+            self.segment = ''
+        else:
+            fullcode = [self.code]
+            parent = self.parent_id
+            while parent:
+                fullcode.append(parent.code)
+                parent = parent.parent_id
+
+            # three segments...
+            newfullcode = [PATTERN[0] % (int(self.type_id.code) + (3 and self.is_campaign))]
+            if self.type_id.code in ['1', '2']:
+                newfullcode.append(PATTERN[1] % int(self.code))
+                newfullcode.append(PATTERN[2] % 0)
+            elif self.type_id.level_parent == 2:
+                newfullcode.append(PATTERN[1] % int(self.parent_id.code))
+                newfullcode.append(PATTERN[2] % int(self.code))
+            else:
+                newfullcode.append(PATTERN[1] % int(self.parent_id.parent_id.code))
+                newfullcode.append(PATTERN[2] % int(self.code))
+
+            self.segment = '.'.join(newfullcode)
 
     @api.depends('campaign_id', 'segment_tmpl_id')
     @api.multi
@@ -139,11 +179,13 @@ class analytic_segment(models.Model):
                 obj.display_name = '%s <%s>' % (obj.segment_tmpl_id.display_name, obj.campaign_id.name)
             else:
                 obj.display_name = obj.segment_tmpl_id.display_name
-    
+
     display_name = fields.Char(compute=display_name, store=True, string="Name")
     segment_tmpl_id = fields.Many2one('analytic_segment.template', ondelete="cascade", required=True)
     campaign_id = fields.Many2one('analytic_segment.campaign')
     is_campaign = fields.Boolean(compute='_is_campaign')
+    user_ids = fields.One2many('analytic_segment.user', 'segment_id')
+    #user_id = fields.Many2one('analytic_segment.user') # to support calculate field
     # base
     #company_ids = fields.Many2many('res.company', 'segment_company_rel')
 
@@ -161,8 +203,26 @@ class analytic_segment_type(models.Model):
 class analytic_segment_user(models.Model):
     _name = 'analytic_segment.user'
     _description = 'Collection of segments by user'
+    
+    #@api.one
+    @api.onchange('company_id')
+    def company_id_onchange(self):
+        segment_tmpl_ids = []
+        res = {}
+        for s in self.company_id.segment_ids:
+            segment_tmpl_ids += s.segment_tmpl_id.get_childs_ids()
+        segment_ids = self.env['analytic_segment.segment'].search([('segment_tmpl_id', 'in', segment_tmpl_ids)])
+        res['domain'] = {
+            'segment_id': [('id', 'in', [i.id for i in segment_ids])]
+        }
+        #res['warning'] = {'title': 'Error!', 'message': 'Something went wrong! Please check your data'}
+        return res
+
+    
     company_id = fields.Many2one('res.company')
     segment_id = fields.Many2one('analytic_segment.segment') # with campaign
+    segment = fields.Char(related='segment_id.segment', readonly=True) #TODO: store
+    campaign_id = fields.Many2one(related='segment_id.campaign_id', readonly=True) #TODO: store
     user_id = fields.Many2one('res.users')
 
 
@@ -182,23 +242,24 @@ class analytic_segment_campaign(models.Model):
     # base
     company_id = fields.Many2one('res.company', required=True)
 
-    @api.multi
+    @api.model
     def create(self, values):
         segment_top = self.env['analytic_segment.template'].browse(values['segment_top'])
-        segments = [segment_top] + segment_top.get_childs()
-        # remove segments
-        for s in self.segment_ids:
-            s.unlink()
-        # create segments
-        s_ids = []
-        for s in segments:
-            vals = {
-                'campaign_id': self.id,
-                'segment_tmpl_id': s.id
-            }
-            n = self.env['analytic_segment.segment'].create(vals)
-            s_ids.append(n.id)
-        values['segment_ids'] = [(6, 0, s_ids)]
+        if segment_top:
+            segments = segment_top.get_childs()
+            # remove segments
+            for s in self.segment_ids:
+                s.unlink()
+            # create segments
+            s_ids = []
+            for s in segments:
+                vals = {
+                    'campaign_id': self.id,
+                    'segment_tmpl_id': s.id
+                }
+                n = self.env['analytic_segment.segment'].create(vals)
+                s_ids.append(n.id)
+            values['segment_ids'] = [(6, 0, s_ids)]
         res_id = super(analytic_segment_campaign, self).create(values)
         return res_id
 

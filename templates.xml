@@ -148,10 +148,13 @@
             <field name="arch" type="xml">
               <notebook position="inside">
                 <page string="Analytic segments">
-                  <field name="segment_ids" colspan="4" nolabel="1" context="{'company_ids': company_ids}">
+                  <field name="segment_ids" colspan="4" nolabel="1"
+                        context="{'company_ids': company_ids}">
                     <tree editable="bottom">
                       <field name="company_id" domain="[('id', 'in', company_ids[0][2])]"/>
                       <field name="segment_id"/>
+                      <field name="segment"/>
+                      <field name="campaign_id"/>
                     </tree>
                   </field>
                 </page>
@@ -180,6 +183,19 @@
             </field>
         </record>
         <!-- END INHERIT base.view_users_form form -->
+
+        <!-- BEGIN account.view_account_analytic_account_tree tree-->
+        <record id="attribute_uom_tree_view" model="ir.ui.view"> 
+            <field name="name">account.analytic.account.segment</field>      
+            <field name="model">account.analytic.account</field>      
+            <field name="inherit_id" ref="account.view_account_analytic_account_tree"/>      
+                <field name="arch" type="xml">        
+                <field name="company_id" position="after">          
+                    <field name="segment_id"/>        
+                </field>      
+            </field>    
+        </record>
+        <!-- END account.view_account_analytic_account_tree tree-->
 
         <!-- BEGIN: action and menu -->
         <record model="ir.actions.act_window" id="action_analytic_segment">

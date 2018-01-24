@@ -1,2 +1,6 @@
 id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
+access_analytic_segment_template,analytic_segment.template,model_analytic_segment_template,,1,0,0,0
 access_analytic_segment_segment,analytic_segment.segment,model_analytic_segment_segment,,1,0,0,0
+access_analytic_segment_type,analytic_segment.type,model_analytic_segment_type,,1,0,0,0
+access_analytic_segment_campaign,analytic_segment.campaign,model_analytic_segment_campaign,,1,0,0,0
+access_analytic_segment_user,analytic_segment.user,model_analytic_segment_user,,1,0,0,0
