@@ -265,7 +265,6 @@ class analytic_segment_campaign(models.Model):
 
     @api.multi
     def write(self, values, context=None):
-        print 'write', values
         if values.has_key('segment_top') and self.segment_top.id != values['segment_top']:
             segment_top = self.env['analytic_segment.template'].browse(values['segment_top'])
             segments = [segment_top] + segment_top.get_childs()

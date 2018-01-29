@@ -191,7 +191,7 @@
             <field name="inherit_id" ref="account.view_account_analytic_account_tree"/>      
                 <field name="arch" type="xml">        
                 <field name="company_id" position="after">          
-                    <field name="segment_id"/>        
+                    <field name="segment_id"/>
                 </field>      
             </field>    
         </record>
