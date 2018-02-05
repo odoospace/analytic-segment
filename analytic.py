@@ -6,6 +6,18 @@ from openerp import models, fields, api
 class account_analytic_account(models.Model):
     _inherit = 'account.analytic.account'
 
+    def name_get(self, cr, uid, ids, context=None):
+        res = []
+        if not ids:
+            return res
+        if isinstance(ids, (int, long)):
+            ids = [ids]
+        for id in ids:
+            elmt = self.browse(cr, uid, id, context=context)
+            segment = '.' in elmt.segment and elmt.segment.split('.')[1] or 'NN'
+            res.append((id, '%s - %s' % (segment, self._get_one_full_name(elmt))))
+        return res
+
     def _search_segment_user(self, operator, value):
         user = self.env['res.users'].browse(value)
         segment_tmpl_ids = []
