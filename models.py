@@ -2,6 +2,7 @@
 # More simple segment model to use in odoo analytic and no analytic objects
 
 from openerp import models, fields, api
+from random import random
 
 PATTERN = ['%i', '%02i', '%06i']
 MAX_LEVEL = len(PATTERN)
@@ -142,7 +143,7 @@ class analytic_segment(models.Model):
             obj.is_campaign = obj.campaign_id and True or False
 
     # override this function from template to add 3 if campaign is True
-    @api.depends('parent_id', 'code', 'type_id', 'campaign_id')
+    @api.depends('parent_id', 'code', 'type_id', 'campaign_id', 'is_campaign')
     @api.one
     def _get_fullcode(self):
         """recursively get depth level in tree"""
@@ -157,7 +158,7 @@ class analytic_segment(models.Model):
                 parent = parent.parent_id
 
             # three segments...
-            newfullcode = [PATTERN[0] % (int(self.type_id.code) + (3 and self.is_campaign))]
+            newfullcode = [PATTERN[0] % (int(self.type_id.code) + (self.is_campaign and 3 or 0))]
             if self.type_id.code in ['1', '2']:
                 newfullcode.append(PATTERN[1] % int(self.code))
                 newfullcode.append(PATTERN[2] % 0)
@@ -182,6 +183,7 @@ class analytic_segment(models.Model):
 
     display_name = fields.Char(compute=display_name, store=True, string="Name")
     segment_tmpl_id = fields.Many2one('analytic_segment.template', ondelete="cascade", required=True)
+    segment = fields.Char(compute="_get_fullcode", store=True, readonly=True)
     campaign_id = fields.Many2one('analytic_segment.campaign')
     is_campaign = fields.Boolean(compute='_is_campaign')
     user_ids = fields.One2many('analytic_segment.user', 'segment_id')
@@ -203,10 +205,20 @@ class analytic_segment_type(models.Model):
 class analytic_segment_user(models.Model):
     _name = 'analytic_segment.user'
     _description = 'Collection of segments by user'
-    
-    #@api.one
+
+    # TODO: Fix selection when company_id is set (not a new row)
+    @api.multi
+    def _company_segment_ids(self):
+        for obj in self:
+            segment_tmpl_ids = []
+            for s in obj.company_id.segment_ids:
+                segment_tmpl_ids += s.segment_tmpl_id.get_childs_ids()
+            segments = obj.env['analytic_segment.segment'].search([('segment_tmpl_id', 'in', segment_tmpl_ids)])
+            obj.company_segment_ids = segments
+
     @api.onchange('company_id')
     def company_id_onchange(self):
+        print 'ON CHANGE!!!'
         segment_tmpl_ids = []
         res = {}
         for s in self.company_id.segment_ids:
@@ -216,14 +228,15 @@ class analytic_segment_user(models.Model):
             'segment_id': [('id', 'in', [i.id for i in segment_ids])]
         }
         #res['warning'] = {'title': 'Error!', 'message': 'Something went wrong! Please check your data'}
+        self.segment_id = None
         return res
 
-    
     company_id = fields.Many2one('res.company')
-    segment_id = fields.Many2one('analytic_segment.segment') # with campaign
+    segment_id = fields.Many2one('analytic_segment.segment') #, domain="[('id', 'in', 'company_segment_ids[0][2]')]") # with campaign
     segment = fields.Char(related='segment_id.segment', readonly=True) #TODO: store
     campaign_id = fields.Many2one(related='segment_id.campaign_id', readonly=True) #TODO: store
     user_id = fields.Many2one('res.users')
+    company_segment_ids = fields.One2many('analytic_segment.segment', compute='_company_segment_ids')
 
 
 class analytic_segment_campaign(models.Model):

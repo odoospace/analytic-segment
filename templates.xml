@@ -154,6 +154,7 @@
                       <field name="company_id" domain="[('id', 'in', company_ids[0][2])]"/>
                       <field name="segment_id"/>
                       <field name="segment"/>
+                      <field name="company_segment_ids" invisible="1"/>
                       <field name="campaign_id"/>
                     </tree>
                   </field>

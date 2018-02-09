@@ -1,0 +1,310 @@
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+#	* analytic_segment
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: Odoo Server 8.0\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2018-01-12 17:58+0000\n"
+"PO-Revision-Date: 2018-01-12 17:58+0000\n"
+"Last-Translator: <>\n"
+"Language-Team: \n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: \n"
+"Plural-Forms: \n"
+
+#. module: analytic_segment
+#: field:analytic_segment.campaign,active:0
+msgid "Active"
+msgstr "Active"
+
+#. module: analytic_segment
+#: model:ir.model,name:analytic_segment.model_account_analytic_account
+msgid "Analytic Account"
+msgstr "Cuenta analítica"
+
+#. module: analytic_segment
+#: field:analytic_segment.segment,analytic_ids:0
+#: field:analytic_segment.template,analytic_ids:0
+msgid "Analytic ids"
+msgstr "Analytic ids"
+
+#. module: analytic_segment
+#: model:ir.actions.act_window,name:analytic_segment.action_analytic_segment
+#: model:ir.ui.menu,name:analytic_segment.menu_analytic_segment
+#: view:res.company:analytic_segment.view_company_segment_form
+#: view:res.users:analytic_segment.view_users_segment_form
+msgid "Analytic segments"
+msgstr "Analytic segments"
+
+#. module: analytic_segment
+#: field:analytic_segment.segment,blocked:0
+#: field:analytic_segment.template,blocked:0
+msgid "Blocked"
+msgstr "Bloqueado"
+
+#. module: analytic_segment
+#: field:analytic_segment.segment,campaign_id:0
+msgid "Campaign id"
+msgstr "Campaign id"
+
+#. module: analytic_segment
+#: field:res.company,campaign_ids:0
+msgid "Campaign ids"
+msgstr "Campaign ids"
+
+#. module: analytic_segment
+#: view:analytic_segment.campaign:analytic_segment.view_analytic_segment_compaign_form
+#: model:ir.actions.act_window,name:analytic_segment.action_analytic_segment_campaign
+#: model:ir.ui.menu,name:analytic_segment.menu_analytic_segment_campaign
+msgid "Campaigns"
+msgstr "Campañas"
+
+#. module: analytic_segment
+#: field:analytic_segment.segment,child_ids:0
+#: field:analytic_segment.template,child_ids:0
+msgid "Child ids"
+msgstr "Child ids"
+
+#. module: analytic_segment
+#: selection:analytic_segment.campaign,state:0
+msgid "Closed"
+msgstr "Closed"
+
+#. module: analytic_segment
+#: field:analytic_segment.campaign,code:0
+#: field:analytic_segment.segment,code:0
+#: field:analytic_segment.template,code:0
+#: field:analytic_segment.type,code:0
+msgid "Code"
+msgstr "Code"
+
+#. module: analytic_segment
+#: model:ir.model,name:analytic_segment.model_analytic_segment_user
+msgid "Collection of segments by user"
+msgstr "Collection of segments by user"
+
+#. module: analytic_segment
+#: model:ir.model,name:analytic_segment.model_res_company
+msgid "Companies"
+msgstr "Compañías"
+
+#. module: analytic_segment
+#: field:analytic_segment.campaign,company_id:0
+#: field:analytic_segment.user,company_id:0
+msgid "Company id"
+msgstr "Company id"
+
+#. module: analytic_segment
+#: field:analytic_segment.campaign,create_uid:0
+#: field:analytic_segment.segment,create_uid:0
+#: field:analytic_segment.template,create_uid:0
+#: field:analytic_segment.type,create_uid:0
+#: field:analytic_segment.user,create_uid:0
+msgid "Created by"
+msgstr "Created by"
+
+#. module: analytic_segment
+#: field:analytic_segment.campaign,create_date:0
+#: field:analytic_segment.segment,create_date:0
+#: field:analytic_segment.template,create_date:0
+#: field:analytic_segment.type,create_date:0
+#: field:analytic_segment.user,create_date:0
+msgid "Created on"
+msgstr "Created on"
+
+#. module: analytic_segment
+#: model:ir.model,name:analytic_segment.model_analytic_segment_campaign
+msgid "Data for campaigns"
+msgstr "Data for campaigns"
+
+#. module: analytic_segment
+#: field:analytic_segment.campaign,date_end:0
+msgid "Date end"
+msgstr "Date end"
+
+#. module: analytic_segment
+#: field:analytic_segment.campaign,date_start:0
+msgid "Date start"
+msgstr "Date start"
+
+#. module: analytic_segment
+#: selection:analytic_segment.campaign,state:0
+msgid "Disabled"
+msgstr "Disabled"
+
+#. module: analytic_segment
+#: field:analytic_segment.campaign,display_name:0
+#: field:analytic_segment.type,display_name:0
+#: field:analytic_segment.user,display_name:0
+msgid "Display Name"
+msgstr "Display Name"
+
+#. module: analytic_segment
+#: field:analytic_segment.campaign,id:0
+#: field:analytic_segment.segment,id:0
+#: field:analytic_segment.template,id:0
+#: field:analytic_segment.type,id:0
+#: field:analytic_segment.user,id:0
+msgid "ID"
+msgstr "ID"
+
+#. module: analytic_segment
+#: field:analytic_segment.segment,is_campaign:0
+msgid "Is campaign"
+msgstr "Is campaign"
+
+#. module: analytic_segment
+#: field:analytic_segment.campaign,__last_update:0
+#: field:analytic_segment.segment,__last_update:0
+#: field:analytic_segment.template,__last_update:0
+#: field:analytic_segment.type,__last_update:0
+#: field:analytic_segment.user,__last_update:0
+msgid "Last Modified on"
+msgstr "Last Modified on"
+
+#. module: analytic_segment
+#: field:analytic_segment.campaign,write_uid:0
+#: field:analytic_segment.segment,write_uid:0
+#: field:analytic_segment.template,write_uid:0
+#: field:analytic_segment.type,write_uid:0
+#: field:analytic_segment.user,write_uid:0
+msgid "Last Updated by"
+msgstr "Last Updated by"
+
+#. module: analytic_segment
+#: field:analytic_segment.campaign,write_date:0
+#: field:analytic_segment.segment,write_date:0
+#: field:analytic_segment.template,write_date:0
+#: field:analytic_segment.type,write_date:0
+#: field:analytic_segment.user,write_date:0
+msgid "Last Updated on"
+msgstr "Last Updated on"
+
+#. module: analytic_segment
+#: field:analytic_segment.segment,level:0
+#: field:analytic_segment.template,level:0
+msgid "Level"
+msgstr "Level"
+
+#. module: analytic_segment
+#: field:analytic_segment.segment,level_parent:0
+#: field:analytic_segment.template,level_parent:0
+#: field:analytic_segment.type,level_parent:0
+msgid "Level parent"
+msgstr "Level parent"
+
+#. module: analytic_segment
+#: field:analytic_segment.campaign,name:0
+#: field:analytic_segment.segment,display_name:0
+#: field:analytic_segment.segment,name:0
+#: field:analytic_segment.template,display_name:0
+#: field:analytic_segment.template,name:0
+#: field:analytic_segment.type,name:0
+msgid "Name"
+msgstr "Name"
+
+#. module: analytic_segment
+#: selection:analytic_segment.campaign,state:0
+msgid "Open"
+msgstr "Open"
+
+#. module: analytic_segment
+#: field:analytic_segment.segment,parent_id:0
+#: field:analytic_segment.template,parent_id:0
+msgid "Parent id"
+msgstr "Parent id"
+
+#. module: analytic_segment
+#: field:account.analytic.account,segment:0
+#: field:analytic_segment.segment,segment:0
+#: field:analytic_segment.template,segment:0
+msgid "Segment"
+msgstr "Segment"
+
+#. module: analytic_segment
+#: field:account.analytic.account,segment_id:0
+#: field:analytic_segment.user,segment_id:0
+msgid "Segment id"
+msgstr "Segment id"
+
+#. module: analytic_segment
+#: field:analytic_segment.campaign,segment_ids:0
+#: field:analytic_segment.type,segment_ids:0
+msgid "Segment ids"
+msgstr "Segment ids"
+
+#. module: analytic_segment
+#: field:analytic_segment.segment,segment_tmpl_id:0
+msgid "Segment tmpl id"
+msgstr "Segment tmpl id"
+
+#. module: analytic_segment
+#: field:analytic_segment.campaign,segment_top:0
+msgid "Segment top"
+msgstr "Segment top"
+
+#. module: analytic_segment
+#: view:analytic_segment.campaign:analytic_segment.view_analytic_segment_compaign_form
+#: view:analytic_segment.template:analytic_segment.view_analytic_segment_template_form
+#: view:analytic_segment.template:analytic_segment.view_analytic_segment_template_tree
+#: field:res.company,segment_ids:0
+#: field:res.users,segment_ids:0
+msgid "Segments"
+msgstr "Segments"
+
+#. module: analytic_segment
+#: model:ir.model,name:analytic_segment.model_analytic_segment_segment
+#: model:ir.model,name:analytic_segment.model_analytic_segment_template
+msgid "Segments for analytic porpouse"
+msgstr "Segments for analytic porpouse"
+
+#. module: analytic_segment
+#: field:analytic_segment.campaign,state:0
+msgid "State"
+msgstr "Estado"
+
+#. module: analytic_segment
+#: field:analytic_segment.segment,type_id:0
+#: field:analytic_segment.template,type_id:0
+msgid "Type"
+msgstr "Tipo"
+
+#. module: analytic_segment
+#: view:analytic_segment.campaign:analytic_segment.view_analytic_segment_campaign_tree
+#: view:analytic_segment.type:analytic_segment.view_analytic_segment_type_form
+#: view:analytic_segment.type:analytic_segment.view_analytic_segment_type_tree
+#: model:ir.actions.act_window,name:analytic_segment.action_analytic_segment_type
+#: model:ir.ui.menu,name:analytic_segment.menu_analytic_segment_type
+msgid "Type of segments"
+msgstr "Tipo de segmento"
+
+#. module: analytic_segment
+#: model:ir.model,name:analytic_segment.model_analytic_segment_type
+msgid "Type of segments for analytic porpouse"
+msgstr "Type of segments for analytic porpouse"
+
+#. module: analytic_segment
+#: field:analytic_segment.user,user_id:0
+msgid "User id"
+msgstr "User id"
+
+#. module: analytic_segment
+#: field:analytic_segment.segment,user_ids:0
+#: field:analytic_segment.template,user_ids:0
+msgid "User ids"
+msgstr "User ids"
+
+#. module: analytic_segment
+#: model:ir.model,name:analytic_segment.model_res_users
+msgid "Users"
+msgstr "Usuarios"
+
+#. module: analytic_segment
+#: field:analytic_segment.segment,virtual:0
+#: field:analytic_segment.template,virtual:0
+msgid "Virtual"
+msgstr "Virtual"
+
