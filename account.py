@@ -6,7 +6,7 @@ from openerp import models, fields, api
 class account_move(models.Model):
     _inherit = 'account.move'
 
-    segment_id = fields.Many2one('analytic_segment.segment') #, required=True)
+    segment_id = fields.Many2one('analytic_segment.segment_id') #, required=True)
     segment = fields.Char(related='segment_id.segment', readonly=True)
 
 
