@@ -28,11 +28,13 @@ class account_analytic_account(models.Model):
         segment_tmpl_ids += [i.id for i in virtual_segments]
 
         segment_ids = self.env['analytic_segment.segment'].search([('segment_tmpl_id', 'in', segment_tmpl_ids)])
-
-        return [('segment_id', 'in', [i.id for i in segment_ids])]
+        filter = [('segment_id', 'in', [i.id for i in segment_ids])]
+        print 'FILTER ->', filter, operator, value
+        return filter
 
     @api.multi
-    def get_segment_user_id(self):
+    def _segment_user_id(self):
+        # TODO: use a helper in analytic_segment if it's possible...
         if self.env.user.id == 1:
             for obj in self:
                 obj.segment_user_id = self.env.uid
@@ -48,12 +50,11 @@ class account_analytic_account(models.Model):
 
             # mark segments with user id
             segment_ids = self.env['analytic_segment.segment'].search([('segment_tmpl_id', 'in', segment_tmpl_ids)])
+            print 'SEGMENT_IDS ->', segment_ids
             for obj in self:
                 if obj.segment_id in segment_ids:
                     obj.segment_user_id = self.env.uid
             
-
-
     segment_id = fields.Many2one('analytic_segment.segment') #, required=True)
     segment = fields.Char(related='segment_id.segment', readonly=True)
-    segment_user_id = fields.Many2one('res.users', compute='get_segment_user_id', search=_search_segment_user)
+    segment_user_id = fields.Many2one('res.users', compute='_segment_user_id', search=_search_segment_user)
