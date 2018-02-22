@@ -18,6 +18,15 @@ class account_analytic_account(models.Model):
             res.append((id, '%s - %s' % (segment, self._get_one_full_name(elmt))))
         return res
 
+    def _get_full_name(self, cr, uid, ids, name=None, args=None, context=None):
+        if context == None:
+            context = {}
+        res = {}
+        for elmt in self.browse(cr, uid, ids, context=context):
+            segment = '.' in elmt.segment and elmt.segment.split('.')[1] or 'NN'
+            res[elmt.id] = '%s - %s' % (segment, self._get_one_full_name(elmt))
+        return res
+
     def _search_segment_user(self, operator, value):
         user = self.env['res.users'].browse(value)
         segment_tmpl_ids = []
