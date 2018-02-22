@@ -18,15 +18,6 @@ class account_analytic_account(models.Model):
             res.append((id, '%s - %s' % (segment, self._get_one_full_name(elmt))))
         return res
 
-    def _get_full_name(self, cr, uid, ids, name=None, args=None, context=None):
-        if context == None:
-            context = {}
-        res = {}
-        for elmt in self.browse(cr, uid, ids, context=context):
-            segment = '.' in elmt.segment and elmt.segment.split('.')[1] or 'NN'
-            res[elmt.id] = '%s - %s' % (segment, self._get_one_full_name(elmt))
-        return res
-
     def _search_segment_user(self, operator, value):
         user = self.env['res.users'].browse(value)
         segment_tmpl_ids = []
@@ -67,3 +58,21 @@ class account_analytic_account(models.Model):
     segment_id = fields.Many2one('analytic_segment.segment') #, required=True)
     segment = fields.Char(related='segment_id.segment', readonly=True)
     segment_user_id = fields.Many2one('res.users', compute='_segment_user_id', search=_search_segment_user)
+
+#inherit in old api to workaround the function field
+from openerp.osv import fields, osv
+class account_analytic_account(models.Model):
+    _inherit = 'account.analytic.account'
+
+    def _get_full_name(self, cr, uid, ids, name=None, args=None, context=None):
+        if context == None:
+            context = {}
+        res = {}
+        for elmt in self.browse(cr, uid, ids, context=context):
+            segment = '.' in elmt.segment and elmt.segment.split('.')[1] or 'NN'
+            res[elmt.id] = '%s - %s' % (segment, self._get_one_full_name(elmt))
+        return res
+
+     _columns = {
+        'complete_name': fields.function(_get_full_name, type='char', string='Full Name')
+    }
