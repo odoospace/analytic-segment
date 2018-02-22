@@ -13,5 +13,5 @@ class account_move(models.Model):
 class account_move_line(models.Model):
     _inherit = 'account.move.line'
 
-    segment_id = fields.Many2one(related='move_id.segment_id', readonly=True, store=True)
+    segment_id = fields.Many2one(related='move_id.segment_id', readonly=True)
     segment = fields.Char(related='segment_id.segment', readonly=True)
