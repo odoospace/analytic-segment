@@ -73,6 +73,6 @@ class account_analytic_account(models.Model):
             res[elmt.id] = '%s - %s' % (segment, self._get_one_full_name(elmt))
         return res
 
-     _columns = {
+    _columns = {
         'complete_name': fields.function(_get_full_name, type='char', string='Full Name')
     }
