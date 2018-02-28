@@ -84,9 +84,9 @@ class analytic_template(models.Model):
         """return a list with childrens, grandchildrens, etc."""
         res = []
         for obj in self.child_ids:
-            if level and obj.level <= level:
+            if level==0 or obj.level <= level:
                 res.append(obj)
-                more_childs = obj.get_childs() # recursive!
+                more_childs = obj.get_childs(level=level) # recursive!
                 if more_childs:
                     for child in more_childs:
                         res.append(child)
@@ -96,9 +96,9 @@ class analytic_template(models.Model):
         """return a list with ids of childrens, grandchildrens, etc."""
         res = []
         for obj in self.child_ids:
-            if level and obj.level <= level:
+            if level==0 or obj.level <= level:
                 res.append(obj.id)
-                more_childs = obj.get_childs() # recursive!
+                more_childs = obj.get_childs(level=level) # recursive!
                 if more_childs:
                     for child in more_childs:
                         res.append(child.id)
@@ -265,7 +265,7 @@ class analytic_segment_campaign(models.Model):
         if segment_top:
             if segment_top.special:
                 # only this one, without childs
-                segments = [segment_top] + segment_top.get_childs(level=2)
+                segments = [segment_top] + segment_top.get_childs(level=3)
             else:
                 segments = [segment_top] + segment_top.get_childs()
             # remove segments
@@ -290,7 +290,7 @@ class analytic_segment_campaign(models.Model):
             segment_top = self.env['analytic_segment.template'].browse(values['segment_top'])
             if segment_top.special:
                 # only this one, without childs
-                segments = [segment_top] + segment_top.get_childs(level=2)
+                segments = [segment_top] + segment_top.get_childs(level=3)
             else:
                 segments = [segment_top] + segment_top.get_childs()
             # remove segments
