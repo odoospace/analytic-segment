@@ -15,3 +15,15 @@ class account_move_line(models.Model):
 
     segment_id = fields.Many2one(related='move_id.segment_id', readonly=True)
     segment = fields.Char(related='segment_id.segment', readonly=True)
+
+class account_invoice(models.Model):
+    _inherit = 'account.invoice'
+
+    segment_id = fields.Many2one('analytic_segment.segment') #, required=True)
+    segment = fields.Char(related='segment_id.segment', readonly=True)
+
+class account_journal(models.Model):
+    _inherit = 'account.journal'
+
+    segment_id = fields.Many2one('analytic_segment.segment') #, required=True)
+    segment = fields.Char(related='segment_id.segment', readonly=True)
