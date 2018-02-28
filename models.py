@@ -80,26 +80,28 @@ class analytic_template(models.Model):
 
             self.segment = '.'.join(newfullcode)
 
-    def get_childs(self):
+    def get_childs(self, level=0):
         """return a list with childrens, grandchildrens, etc."""
-        res = [self]
+        res = []
         for obj in self.child_ids:
-            res.append(obj)
-            more_childs = obj.get_childs() # recursive!
-            if more_childs:
-                for child in more_childs:
-                    res.append(child)
+            if level and obj.level <= level:
+                res.append(obj)
+                more_childs = obj.get_childs() # recursive!
+                if more_childs:
+                    for child in more_childs:
+                        res.append(child)
         return res
 
-    def get_childs_ids(self):
+    def get_childs_ids(self, level=0):
         """return a list with ids of childrens, grandchildrens, etc."""
-        res = [self.id]
+        res = []
         for obj in self.child_ids:
-            res.append(obj.id)
-            more_childs = obj.get_childs() # recursive!
-            if more_childs:
-                for child in more_childs:
-                    res.append(child.id)
+            if level and obj.level <= level:
+                res.append(obj.id)
+                more_childs = obj.get_childs() # recursive!
+                if more_childs:
+                    for child in more_childs:
+                        res.append(child.id)
         return res
 
     @api.model
@@ -120,7 +122,8 @@ class analytic_template(models.Model):
     segment = fields.Char(compute="_get_fullcode", store=True, readonly=True)
     level = fields.Integer(compute="_get_level", store=True, readonly=True)
     level_parent = fields.Integer(related="type_id.level_parent", readonly=True)
-    virtual = fields.Boolean(default=False) # we can't use virtual segments
+    virtual = fields.Boolean(default=False) # everyone can use virtual segments
+    special = fields.Boolean(default=False) # for campaigns (set level depth to 2)
     blocked = fields.Boolean(default=False)
     parent_id = fields.Many2one('analytic_segment.template')
     child_ids = fields.One2many('analytic_segment.template', 'parent_id')
@@ -212,16 +215,17 @@ class analytic_segment_user(models.Model):
         for obj in self:
             segment_tmpl_ids = []
             for s in obj.company_id.segment_ids:
+                segment_tmpl_ids += [s.segment_tmpl_id.id]
                 segment_tmpl_ids += s.segment_tmpl_id.get_childs_ids()
             segments = obj.env['analytic_segment.segment'].search([('segment_tmpl_id', 'in', segment_tmpl_ids)])
             obj.company_segment_ids = segments
 
     @api.onchange('company_id')
     def company_id_onchange(self):
-        print 'ON CHANGE!!!'
         segment_tmpl_ids = []
         res = {}
         for s in self.company_id.segment_ids:
+            segment_tmpl_ids += [s.segment_tmpl_id.id]
             segment_tmpl_ids += s.segment_tmpl_id.get_childs_ids()
         segment_ids = self.env['analytic_segment.segment'].search([('segment_tmpl_id', 'in', segment_tmpl_ids)])
         res['domain'] = {
@@ -259,7 +263,11 @@ class analytic_segment_campaign(models.Model):
     def create(self, values):
         segment_top = self.env['analytic_segment.template'].browse(values['segment_top'])
         if segment_top:
-            segments = segment_top.get_childs()
+            if segment_top.special:
+                # only this one, without childs
+                segments = [segment_top] + segment_top.get_childs(level=2)
+            else:
+                segments = [segment_top] + segment_top.get_childs()
             # remove segments
             for s in self.segment_ids:
                 s.unlink()
@@ -280,7 +288,11 @@ class analytic_segment_campaign(models.Model):
     def write(self, values, context=None):
         if values.has_key('segment_top') and self.segment_top.id != values['segment_top']:
             segment_top = self.env['analytic_segment.template'].browse(values['segment_top'])
-            segments = [segment_top] + segment_top.get_childs()
+            if segment_top.special:
+                # only this one, without childs
+                segments = [segment_top] + segment_top.get_childs(level=2)
+            else:
+                segments = [segment_top] + segment_top.get_childs()
             # remove segments
             for s in self.segment_ids:
                 s.unlink()

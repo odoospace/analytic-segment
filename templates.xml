@@ -14,6 +14,7 @@
                   <field name="parent_id" />
                   <field name="segment" />
                   <field name="virtual" />
+                  <field name="special" />
                   <field name="blocked" />
                   <field name="child_ids" />
               </tree>
@@ -35,6 +36,7 @@
                         <field name="level_parent" attrs="{'invisible': 1}" />
                         <field name="segment" />
                         <field name="virtual" />
+                        <field name="special" />
                         <field name="blocked" />
                     </group>
                 </form>
@@ -97,8 +99,7 @@
                         <page string="Segments">
                         <field name="segment_ids" colspan="4" nolabel="1">
                             <tree editable="bottom">
-                                <field name="name"/>
-                                <field name="type_id"/>
+                                <field name="segment_tmpl_id"/>
                                 <field name="segment"/>
                                 <field name="blocked"/>
                             </tree>
