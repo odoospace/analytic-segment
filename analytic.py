@@ -15,7 +15,11 @@ class account_analytic_account(models.Model):
         for id in ids:
             elmt = self.browse(cr, uid, id, context=context)
             segment = '.' in elmt.segment and elmt.segment.split('.')[1] or 'NN'
-            res.append((id, '%s - %s' % (segment, self._get_one_full_name(elmt))))
+            try:
+                res.append((id, '%s - %s' % (segment, self._get_one_full_name(elmt))))
+            except:
+                # TODO: to use an exception definition
+                pass
         return res
 
     def _search_segment_user(self, operator, value):
@@ -30,7 +34,7 @@ class account_analytic_account(models.Model):
 
         segment_ids = self.env['analytic_segment.segment'].search([('segment_tmpl_id', 'in', segment_tmpl_ids)])
         filter = [('segment_id', 'in', [i.id for i in segment_ids])]
-        print 'FILTER ->', filter, operator, value
+        #print 'FILTER ->', filter, operator, value
         return filter
 
     @api.multi
