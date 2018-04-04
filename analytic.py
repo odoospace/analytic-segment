@@ -14,7 +14,7 @@ class account_analytic_account(models.Model):
             ids = [ids]
         for id in ids:
             elmt = self.browse(cr, uid, id, context=context)
-            segment = '.' in elmt.segment and elmt.segment.split('.')[1] or 'NN'
+            segment = elmt.segment and '.' in elmt.segment and elmt.segment.split('.')[1] or 'NN'
             try:
                 res.append((id, '%s - %s' % (segment, self._get_one_full_name(elmt))))
             except:
