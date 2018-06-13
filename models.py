@@ -80,6 +80,7 @@ class analytic_template(models.Model):
 
             self.segment = '.'.join(newfullcode)
 
+    @api.model
     def get_childs(self, level=0):
         """return a list with childrens, grandchildrens, etc."""
         res = []
@@ -92,6 +93,7 @@ class analytic_template(models.Model):
                         res.append(child)
         return res
 
+    @api.model
     def get_childs_ids(self, level=0):
         """return a list with ids of childrens, grandchildrens, etc."""
         res = []
