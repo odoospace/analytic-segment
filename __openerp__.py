@@ -17,7 +17,7 @@
     # Check https://github.com/odoo/odoo/blob/master/openerp/addons/base/module/module_data.xml
     # for the full list
     'category': 'Uncategorized',
-    'version': '8.0.10.0',
+    'version': '8.0.11.0',
 
     # any module necessary for this one to work correctly
     'depends': ['base', 'account', 'account_budget', 'universal_account'],
@@ -26,6 +26,7 @@
     'data': [
         'security/ir.model.access.csv',
         'templates.xml',
+        'security/security.xml',
     ],
     # only loaded in demonstration mode
     #'demo': [

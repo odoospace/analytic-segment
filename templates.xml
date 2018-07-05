@@ -307,6 +307,9 @@
                     <field name="segment_id"/>
                     <field name="segment"/>
                 </field>
+                <field name="entry_posted" position='after'>
+                  <field name="check_segment_id" string='Check segment in Moves'/>
+                </field>
             </field>
         </record>
         <!-- END INHERIT account.view_account_journal_form -->

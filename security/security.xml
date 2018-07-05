@@ -1,0 +1,11 @@
+<openerp>
+    <data>
+
+        <record model="res.groups" id="group_analyticsegments_norestrictions">
+            <field name="name">NO segments restrictions</field>
+            <field name="category_id" ref="base.module_category_hidden"/>
+        </record>
+
+    </data>
+</openerp>
+
