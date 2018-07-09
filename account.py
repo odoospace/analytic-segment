@@ -14,11 +14,11 @@ class account_move(models.Model):
         invoice = context.get('invoice', False)
         if invoice:
             vals['segment_id'] = context["invoice"].segment_id.id
-        return super(AccountMove, self).create(vals)
+        return super(account_move, self).create(vals)
 
     @api.multi
     def write(self, vals):
-        result = super(AccountMove, self).write(vals)
+        result = super(account_move, self).write(vals)
         inv = self.env['account.invoice'].search([('number', '=' , self.ref)])
         if self.line_id:
             values = {"segment_id": self.segment_id.id}
@@ -97,7 +97,7 @@ class account_invoice(models.Model):
 
     @api.multi
     def write(self, vals):
-        result = super(AccountInvoice, self).write(vals)
+        result = super(account_invoice, self).write(vals)
         for inv in self:
             if inv.move_id and \
                inv.segment_id != inv.move_id.segment_id:
