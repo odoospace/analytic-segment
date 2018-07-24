@@ -168,7 +168,12 @@ class account_invoice(models.Model):
             domain = [('id', 'in', [i.id for i in segment_ids])]
         return domain
 
-    segment_id = fields.Many2one('analytic_segment.segment', domain=_domain_segment, required=True) #, required=True)
+    def _get_default_segment_from_user(self):
+        for i in self.env.user.segment_ids:
+            if i.company_id == self.env.user.company_id:
+                return i.segment_id
+
+    segment_id = fields.Many2one('analytic_segment.segment', domain=_domain_segment, required=True, default=_get_default_segment_from_user) #, required=True)
     segment = fields.Char(related='segment_id.segment', readonly=True)
 
 class account_journal(models.Model):
