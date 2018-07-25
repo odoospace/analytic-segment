@@ -299,6 +299,9 @@
                     <field name="segment"/>
                     <field name="campaign_segment"/>
                 </field>
+                <xpath expr="//tree//field[4]" position="attributes">
+                    <attribute name="domain">[('journal_id','=',parent.journal_id),('company_id', '=', parent.company_id), ('campaign', '=', parent.campaign_segment)]</attribute>
+                </xpath>
             </field>
         </record>
         <!-- END INHERIT view_move_form -->
