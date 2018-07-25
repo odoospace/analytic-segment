@@ -178,7 +178,7 @@ class account_invoice(models.Model):
             if i.company_id == self.env.user.company_id:
                 return i.segment_id
 
-    def _get_capaign_segment(self):
+    def _get_campaign_segment(self):
         campaign_segment = self.env['analytic_segment.campaign'].search([(self.segment_id.segment_tmpl_id.id, 'in', 'segment_ids')])
         if campaign_segment:
             self.campaign_segment = True
