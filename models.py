@@ -71,11 +71,13 @@ class analytic_template(models.Model):
             if self.type_id.code in ['1', '2']:
                 newfullcode.append(PATTERN[1] % int(self.code))
                 newfullcode.append(PATTERN[2] % 0)
-            elif self.type_id.level_parent == 2:
-                newfullcode.append(PATTERN[1] % int(self.parent_id.code))
-                newfullcode.append(PATTERN[2] % int(self.code))
             else:
-                newfullcode.append(PATTERN[1] % int(self.parent_id.parent_id.code))
+                parents = []
+                obj = self.parent_id
+                while obj:
+                    parents.insert(0, obj.code)
+                    obj = obj.parent_id
+                newfullcode.append(PATTERN[1] % int(parents[self.type_id.level_parent]))
                 newfullcode.append(PATTERN[2] % int(self.code))
 
             self.segment = '.'.join(newfullcode)
@@ -167,11 +169,13 @@ class analytic_segment(models.Model):
             if self.type_id.code in ['1', '2']:
                 newfullcode.append(PATTERN[1] % int(self.code))
                 newfullcode.append(PATTERN[2] % 0)
-            elif self.type_id.level_parent == 2:
-                newfullcode.append(PATTERN[1] % int(self.parent_id.code))
-                newfullcode.append(PATTERN[2] % int(self.code))
             else:
-                newfullcode.append(PATTERN[1] % int(self.parent_id.parent_id.code))
+                parents = []
+                obj = self.parent_id
+                while obj:
+                    parents.insert(0, obj.code)
+                    obj = obj.parent_id
+                newfullcode.append(PATTERN[1] % int(parents[self.type_id.level_parent]))
                 newfullcode.append(PATTERN[2] % int(self.code))
 
             self.segment = '.'.join(newfullcode)
