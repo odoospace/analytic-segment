@@ -178,8 +178,18 @@ class account_invoice(models.Model):
             if i.company_id == self.env.user.company_id:
                 return i.segment_id
 
+    def _get_capaign_segment(self):
+        campaign_segment = self.env['analytic_segment.campaign'].search([(self.segment_id.segment_tmpl_id.id, 'in', 'segment_ids')])
+        if campaign_segment:
+            self.campaign_segment = True
+            return True
+        else:
+            self.campaign_segment = False
+            return False
+
     segment_id = fields.Many2one('analytic_segment.segment', domain=_domain_segment, required=True, default=_get_default_segment_from_user) #, required=True)
     segment = fields.Char(related='segment_id.segment', readonly=True)
+    campaign_segment = fields.Boolean(compute=_get_campaign_segment)
 
 class account_journal(models.Model):
     _inherit = 'account.journal'
