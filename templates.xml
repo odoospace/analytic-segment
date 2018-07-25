@@ -291,6 +291,7 @@
                 <field name="company_id" position="after">
                     <field name="segment_id"/>
                     <field name="segment"/>
+                    <field name="campaign_segment"/>
                 </field>
             </field>
         </record>
