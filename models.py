@@ -87,7 +87,7 @@ class analytic_template(models.Model):
         """return a list with childrens, grandchildrens, etc."""
         res = []
         for obj in self.child_ids:
-            if level==0 or obj.level <= level:
+            if (level==0 or obj.level <= level) and not obj.blocked:
                 res.append(obj)
                 more_childs = obj.get_childs(level=level) # recursive!
                 if more_childs:
@@ -100,7 +100,7 @@ class analytic_template(models.Model):
         """return a list with ids of childrens, grandchildrens, etc."""
         res = []
         for obj in self.child_ids:
-            if level==0 or obj.level <= level:
+            if (level==0 or obj.level <= level) and not obj.blocked:
                 res.append(obj.id)
                 more_childs = obj.get_childs(level=level) # recursive!
                 if more_childs:
