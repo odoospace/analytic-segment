@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 # use analytic_segment with analytic accounts
 
-from openerp import models, fields, api
+from openerp import models, fields, api, _
 from openerp.osv import osv
 
 class account_move(models.Model):
