@@ -44,8 +44,8 @@ class account_move(models.Model):
             for s in segment_ids:
                 segment_tmpl_ids += [s.segment_id.segment_tmpl_id.id]
                 segment_tmpl_ids += s.segment_id.segment_tmpl_id.get_childs_ids()
-            virtual_segments = self.env['analytic_segment.template'].search([('virtual', '=', True)])
-            segment_tmpl_ids += [i.id for i in virtual_segments]
+            # virtual_segments = self.env['analytic_segment.template'].search([('virtual', '=', True)])
+            # segment_tmpl_ids += [i.id for i in virtual_segments]
 
             segment_ids = self.env['analytic_segment.segment'].search([('segment_tmpl_id', 'in', segment_tmpl_ids)])
             domain = [('id', 'in', [i.id for i in segment_ids])]
@@ -76,8 +76,8 @@ class account_move_line(models.Model):
             for s in segment_ids:
                 segment_tmpl_ids += [s.segment_id.segment_tmpl_id.id]
                 segment_tmpl_ids += s.segment_id.segment_tmpl_id.get_childs_ids()
-            virtual_segments = self.env['analytic_segment.template'].search([('virtual', '=', True)])
-            segment_tmpl_ids += [i.id for i in virtual_segments]
+            # virtual_segments = self.env['analytic_segment.template'].search([('virtual', '=', True)])
+            # segment_tmpl_ids += [i.id for i in virtual_segments]
 
             segment_ids = self.env['analytic_segment.segment'].search([('segment_tmpl_id', 'in', segment_tmpl_ids)])
             domain = [('id', 'in', [i.id for i in segment_ids])]
@@ -168,8 +168,8 @@ class account_invoice(models.Model):
             for s in segment_ids:
                 segment_tmpl_ids += [s.segment_id.segment_tmpl_id.id]
                 segment_tmpl_ids += s.segment_id.segment_tmpl_id.get_childs_ids()
-            virtual_segments = self.env['analytic_segment.template'].search([('virtual', '=', True)])
-            segment_tmpl_ids += [i.id for i in virtual_segments]
+            # virtual_segments = self.env['analytic_segment.template'].search([('virtual', '=', True)])
+            # segment_tmpl_ids += [i.id for i in virtual_segments]
 
             segment_ids = self.env['analytic_segment.segment'].search([('segment_tmpl_id', 'in', segment_tmpl_ids)])
             domain = [('id', 'in', [i.id for i in segment_ids])]
