@@ -2,6 +2,7 @@
 # use analytic_segment with analytic accounts
 
 from openerp import models, fields, api, _
+from openerp.exceptions import ValidationError, Warning
 from openerp.osv import osv
 
 class account_move(models.Model):
