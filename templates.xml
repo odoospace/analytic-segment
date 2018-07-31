@@ -317,7 +317,10 @@
                     <field name="campaign_segment"/>
                 </field>
                 <xpath expr="//tree//field[4]" position="attributes">
-                    <attribute name="domain">[('journal_id','=',parent.journal_id),('company_id', '=', parent.company_id), ('campaign', '=', parent.campaign_segment)]</attribute>
+                    <attribute name="domain">[('journal_id','=',parent.journal_id),('company_id', '=', parent.company_id), ('campaign', '=', parent.campaign_segment), ('type', '!=', 'view')]</attribute>
+                </xpath>
+                <xpath expr="//tree" position="attributes">
+                    <attribute name="editable">bottom</attribute>
                 </xpath>
             </field>
         </record>

@@ -86,6 +86,7 @@ class account_move_line(models.Model):
 
     segment_id = fields.Many2one(related='move_id.segment_id', readonly=True, domain=_domain_segment)
     segment = fields.Char(related='segment_id.segment', readonly=True)
+    campaign_segment = fields.Boolean(related='move_id.campaign_segment')
 
 class account_invoice(models.Model):
     _inherit = 'account.invoice'
