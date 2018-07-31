@@ -3,6 +3,7 @@
 
 from openerp import models, fields, api, _
 from openerp.exceptions import ValidationError, Warning
+from openerp.tools import float_compare
 from openerp.osv import osv
 
 class account_move(models.Model):
@@ -91,7 +92,7 @@ class account_move_line(models.Model):
 class account_invoice(models.Model):
     _inherit = 'account.invoice'
 
-    @api.onchange('segment_id')
+    @api.onchange('segment_id', 'partner_id')
     def _change_account_campaign(self):
         if self.segment_id.is_campaign == True:
             if self.partner_id.associate:
