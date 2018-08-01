@@ -263,6 +263,23 @@
             </field>
         </record>
         <!-- END INHERIT account.invoice_tree -->
+        <!-- BEGIN payment wizard form -->
+        <record id="view_voucher_filter_customer_pay_as" model="ir.ui.view">
+            <field name="name">account.voucher.customer.pay.select.as</field>
+            <field name="model">account.voucher</field>
+            <field name="inherit_id" ref="account_voucher.view_vendor_receipt_dialog_form"></field>
+            <field name="arch" type="xml">
+                <xpath expr="//field[@name='journal_id']" position="replace">
+                    <field name="journal_id"
+                          invisible="context.get('line_type', False)"
+                          widget="selection"
+                          domain="[('type','in',['bank', 'cash']),('type','in',('bank','cash')),('company_id', '=', context.get('company_id')),('segment_id', '=', context.get('segment_id'))]"
+                          on_change="onchange_journal(journal_id, line_cr_ids, False, partner_id, date, amount, type, company_id, context)"
+                          string="Payment Method"/>
+                </xpath>
+            </field>
+        </record>
+        <!-- BEGIN payment wizard form -->
         <!-- END OF SUPPLIER INVOICING RELATED VIEWS -->
 
 
@@ -302,6 +319,12 @@
                     <field name="segment"/>
                     <field name="campaign_segment"/>
                 </field>
+                <xpath expr="//tree//field[4]" position="attributes">
+                    <attribute name="domain">[('journal_id','=',parent.journal_id),('company_id', '=', parent.company_id), ('campaign', '=', parent.campaign_segment), ('type', '!=', 'view')]</attribute>
+                </xpath>
+                <xpath expr="//tree" position="attributes">
+                    <attribute name="editable">bottom</attribute>
+                </xpath>
             </field>
         </record>
         <!-- END INHERIT view_move_form -->
