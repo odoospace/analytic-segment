@@ -31,9 +31,10 @@
                         <field name="code" />
                         <field name="name" />
                         <field name="type_id" />
-                        <field name="parent_id" domain="[('level', '=', level_parent)]"/>
+                        <field name="parent_id"/>
                         <field name="level" />
-                        <field name="level_parent" attrs="{'invisible': 1}" />
+                        <field name="level_parent" />
+                        <field name="type_parent_ids" invisible="1" />
                         <field name="segment" />
                         <field name="virtual" />
                         <field name="special" />
@@ -54,6 +55,7 @@
                     <field name="code" />
                     <field name="name" />
                     <field name="level_parent" />
+                    <field name="parent_ids" widget="many2many_tags" />
                     <field name="segment_ids" />
                 </tree>
             </field>
@@ -121,6 +123,7 @@
                         <field name="code" />
                         <field name="name" />
                         <field name="level_parent" />
+                        <field name="parent_ids" widget="many2many_tags" options="{'no_create_edit': True}"/>
                     </group>
                 </form>
             </field>

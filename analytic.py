@@ -56,7 +56,7 @@ class account_analytic_account(models.Model):
 
             # mark segments with user id
             segment_ids = self.env['analytic_segment.segment'].search([('segment_tmpl_id', 'in', segment_tmpl_ids)])
-            print 'SEGMENT_IDS ->', segment_ids
+            #print 'SEGMENT_IDS ->', segment_ids
             for obj in self:
                 if obj.segment_id in segment_ids:
                     obj.segment_user_id = self.env.uid

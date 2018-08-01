@@ -271,7 +271,7 @@ class AccountVoucher(models.Model):
                 currency_rate_difference = sign * (line.move_line_id.amount_residual - amount)
             else:
                 currency_rate_difference = 0.0
-            print line.move_line_id, line.move_line_id.territory_id.id, line.move_line_id.territory_level
+            #print line.move_line_id, line.move_line_id.territory_id.id, line.move_line_id.territory_level
             move_line = {
                 'journal_id': voucher.journal_id.id,
                 'period_id': voucher.period_id.id,

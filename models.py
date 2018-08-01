@@ -36,7 +36,7 @@ class analytic_template(models.Model):
         self.parent_id = ''
         res = {}
         res['domain'] = {
-            'parent_id': [('level', '=', self.type_id.level_parent)]
+            'parent_id': [('type_id', 'in', [i.id for i in self.type_parent_ids])]
         }
         return res
 
@@ -60,6 +60,7 @@ class analytic_template(models.Model):
         if not self.type_id:
             self.segment = ''
         else:
+            error = False
             fullcode = [self.code]
             parent = self.parent_id
             while parent:
@@ -67,27 +68,32 @@ class analytic_template(models.Model):
                 parent = parent.parent_id
 
             # three segments...
-            newfullcode = [PATTERN[0] % int(self.type_id.code)]
-            if self.type_id.code in ['1', '2']:
-                newfullcode.append(PATTERN[1] % int(self.code))
-                newfullcode.append(PATTERN[2] % 0)
-            else:
-                parents = []
-                obj = self.parent_id
-                while obj:
-                    parents.insert(0, obj.code)
-                    obj = obj.parent_id
-                newfullcode.append(PATTERN[1] % int(parents[self.type_id.level_parent]))
-                newfullcode.append(PATTERN[2] % int(self.code))
-
-            self.segment = '.'.join(newfullcode)
+            try:
+                newfullcode = [PATTERN[0] % int(self.type_id.code)]
+                if self.type_id.code in ['1', '2']:
+                    newfullcode.append(PATTERN[1] % int(self.code))
+                    newfullcode.append(PATTERN[2] % 0)
+                else:
+                    parents = []
+                    obj = self.parent_id
+                    while obj:
+                        parents.insert(0, obj.code)
+                        obj = obj.parent_id
+                    newfullcode.append(PATTERN[1] % int(parents[self.type_id.level_parent]))
+                    newfullcode.append(PATTERN[2] % int(self.code))
+            except:
+                self.segment = ''
+                error = True
+            
+            if not error:
+                self.segment = '.'.join(newfullcode)
 
     @api.model
     def get_childs(self, level=0):
         """return a list with childrens, grandchildrens, etc."""
         res = []
         for obj in self.child_ids:
-            if level==0 or obj.level <= level:
+            if (level==0 or obj.level <= level) and not obj.blocked:
                 res.append(obj)
                 more_childs = obj.get_childs(level=level) # recursive!
                 if more_childs:
@@ -100,7 +106,7 @@ class analytic_template(models.Model):
         """return a list with ids of childrens, grandchildrens, etc."""
         res = []
         for obj in self.child_ids:
-            if level==0 or obj.level <= level:
+            if (level==0 or obj.level <= level) and not obj.blocked:
                 res.append(obj.id)
                 more_childs = obj.get_childs(level=level) # recursive!
                 if more_childs:
@@ -126,6 +132,7 @@ class analytic_template(models.Model):
     segment = fields.Char(compute="_get_fullcode", store=True, readonly=True)
     level = fields.Integer(compute="_get_level", store=True, readonly=True)
     level_parent = fields.Integer(related="type_id.level_parent", readonly=True)
+    type_parent_ids = fields.Many2many(related="type_id.parent_ids", readonly=True)
     virtual = fields.Boolean(default=False) # everyone can use virtual segments
     special = fields.Boolean(default=False) # for campaigns (set level depth to 2)
     blocked = fields.Boolean(default=False)
@@ -208,6 +215,8 @@ class analytic_segment_type(models.Model):
     code = fields.Char(required=True)
     name = fields.Char(required=True)
     level_parent = fields.Integer(required=True)
+    parent_ids = fields.Many2many('analytic_segment.type', 'parent_ids', 'child_ids')
+    child_ids = fields.Many2many('analytic_segment.type', 'child_ids', 'parent_ids')
     segment_ids = fields.One2many('analytic_segment.segment', 'type_id')
 
 
