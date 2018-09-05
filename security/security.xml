@@ -13,7 +13,7 @@
             <field name="perm_write" eval="1"/>
             <field name="perm_create" eval="1"/>
             <field name="perm_unlink" eval="1"/>
-            <field name="domain_force">['&',('segment_user_id','=',user.id),('company_id','child_of',[user.company_id.id])]</field>
+            <field name="domain_force">['&amp;',('segment_user_id','=',user.id),('company_id','child_of',[user.company_id.id])]</field>
         </record>
 
         <record id="see_only_visible_invoice_segment" model="ir.rule">
@@ -23,7 +23,7 @@
             <field name="perm_write" eval="1"/>
             <field name="perm_create" eval="1"/>
             <field name="perm_unlink" eval="1"/>
-            <field name="domain_force">['&',('segment_user_id','=',user.id),('company_id','child_of',[user.company_id.id])]</field>
+            <field name="domain_force">['&amp;',('segment_user_id','=',user.id),('company_id','child_of',[user.company_id.id])]</field>
         </record>
 
         <record id="see_only_visible_move_segment" model="ir.rule">
@@ -33,7 +33,7 @@
             <field name="perm_write" eval="1"/>
             <field name="perm_create" eval="1"/>
             <field name="perm_unlink" eval="1"/>
-            <field name="domain_force">['&',('segment_user_id','=',user.id),('company_id','child_of',[user.company_id.id])]</field>
+            <field name="domain_force">['&amp;',('segment_user_id','=',user.id),('company_id','child_of',[user.company_id.id])]</field>
         </record>
 
         <record id="see_only_visible_move_line_segment" model="ir.rule">
@@ -43,7 +43,7 @@
             <field name="perm_write" eval="1"/>
             <field name="perm_create" eval="1"/>
             <field name="perm_unlink" eval="1"/>
-            <field name="domain_force">['&',('segment_user_id','=',user.id),('company_id','child_of',[user.company_id.id])]</field>
+            <field name="domain_force">['&amp;',('segment_user_id','=',user.id),('company_id','child_of',[user.company_id.id])]</field>
         </record>
         <!-- END TERRITORIAL SECURITY GROUP AND ACCES RULES -->
     </data>
