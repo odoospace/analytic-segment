@@ -58,9 +58,51 @@ class account_move(models.Model):
             if i.company_id == self.env.user.company_id:
                 return i.segment_id
 
+
+    def _search_segment_user(self, operator, value):
+        user = self.env['res.users'].browse(value)
+        segment_tmpl_ids = []
+        segment_ids = user.segment_ids
+        for s in segment_ids:
+            segment_tmpl_ids += [s.segment_id.segment_tmpl_id.id]
+            segment_tmpl_ids += s.segment_id.segment_tmpl_id.get_childs_ids()
+        virtual_segments = self.env['analytic_segment.template'].search([('virtual', '=', True)])
+        segment_tmpl_ids += [i.id for i in virtual_segments]
+
+        segment_ids = self.env['analytic_segment.segment'].search([('segment_tmpl_id', 'in', segment_tmpl_ids)])
+        filter = [('segment_id', 'in', [i.id for i in segment_ids])]
+        #print 'FILTER ->', filter, operator, value
+        return filter
+
+    @api.multi
+    def _segment_user_id(self):
+        # TODO: use a helper in analytic_segment if it's possible...
+        if self.env.user.id == 1:
+            for obj in self:
+                obj.segment_user_id = self.env.uid
+        else:
+            # add users segments
+            segment_tmpl_ids = []
+            segment_ids = self.env.user.segment_ids
+            for s in segment_ids:
+                segment_tmpl_ids += [s.segment_id.segment_tmpl_id.id]
+                segment_tmpl_ids += s.segment_id.segment_tmpl_id.get_childs_ids()
+            # add virtual companies segments
+            virtual_segments = self.env['analytic_segment.template'].search([('virtual', '=', True)])
+            segment_tmpl_ids += [i.id for i in virtual_segments]
+
+            # mark segments with user id
+            segment_ids = self.env['analytic_segment.segment'].search([('segment_tmpl_id', 'in', segment_tmpl_ids)])
+            #print 'SEGMENT_IDS ->', segment_ids
+            for obj in self:
+                if obj.segment_id in segment_ids:
+                    obj.segment_user_id = self.env.uid
+
     segment_id = fields.Many2one('analytic_segment.segment', domain=_domain_segment, required=True, default=_get_default_segment_from_user) #)
     segment = fields.Char(related='segment_id.segment', readonly=True)
     campaign_segment = fields.Boolean(related='segment_id.is_campaign')
+    segment_user_id = fields.Many2one('res.users', compute='_segment_user_id', search=_search_segment_user)
+
 
 
 
@@ -85,9 +127,50 @@ class account_move_line(models.Model):
             domain = [('id', 'in', [i.id for i in segment_ids])]
         return domain
 
+    def _search_segment_user(self, operator, value):
+        user = self.env['res.users'].browse(value)
+        segment_tmpl_ids = []
+        segment_ids = user.segment_ids
+        for s in segment_ids:
+            segment_tmpl_ids += [s.segment_id.segment_tmpl_id.id]
+            segment_tmpl_ids += s.segment_id.segment_tmpl_id.get_childs_ids()
+        virtual_segments = self.env['analytic_segment.template'].search([('virtual', '=', True)])
+        segment_tmpl_ids += [i.id for i in virtual_segments]
+
+        segment_ids = self.env['analytic_segment.segment'].search([('segment_tmpl_id', 'in', segment_tmpl_ids)])
+        filter = [('segment_id', 'in', [i.id for i in segment_ids])]
+        #print 'FILTER ->', filter, operator, value
+        return filter
+
+    @api.multi
+    def _segment_user_id(self):
+        # TODO: use a helper in analytic_segment if it's possible...
+        if self.env.user.id == 1:
+            for obj in self:
+                obj.segment_user_id = self.env.uid
+        else:
+            # add users segments
+            segment_tmpl_ids = []
+            segment_ids = self.env.user.segment_ids
+            for s in segment_ids:
+                segment_tmpl_ids += [s.segment_id.segment_tmpl_id.id]
+                segment_tmpl_ids += s.segment_id.segment_tmpl_id.get_childs_ids()
+            # add virtual companies segments
+            virtual_segments = self.env['analytic_segment.template'].search([('virtual', '=', True)])
+            segment_tmpl_ids += [i.id for i in virtual_segments]
+
+            # mark segments with user id
+            segment_ids = self.env['analytic_segment.segment'].search([('segment_tmpl_id', 'in', segment_tmpl_ids)])
+            #print 'SEGMENT_IDS ->', segment_ids
+            for obj in self:
+                if obj.segment_id in segment_ids:
+                    obj.segment_user_id = self.env.uid
+
     segment_id = fields.Many2one(related='move_id.segment_id', readonly=True, domain=_domain_segment)
     segment = fields.Char(related='segment_id.segment', readonly=True)
     campaign_segment = fields.Boolean(related='move_id.campaign_segment')
+    segment_user_id = fields.Many2one('res.users', compute='_segment_user_id', search=_search_segment_user)
+
 
 class account_invoice(models.Model):
     _inherit = 'account.invoice'
@@ -183,9 +266,50 @@ class account_invoice(models.Model):
             if i.company_id == self.env.user.company_id:
                 return i.segment_id
 
+    def _search_segment_user(self, operator, value):
+        user = self.env['res.users'].browse(value)
+        segment_tmpl_ids = []
+        segment_ids = user.segment_ids
+        for s in segment_ids:
+            segment_tmpl_ids += [s.segment_id.segment_tmpl_id.id]
+            segment_tmpl_ids += s.segment_id.segment_tmpl_id.get_childs_ids()
+        virtual_segments = self.env['analytic_segment.template'].search([('virtual', '=', True)])
+        segment_tmpl_ids += [i.id for i in virtual_segments]
+
+        segment_ids = self.env['analytic_segment.segment'].search([('segment_tmpl_id', 'in', segment_tmpl_ids)])
+        filter = [('segment_id', 'in', [i.id for i in segment_ids])]
+        #print 'FILTER ->', filter, operator, value
+        return filter
+
+    @api.multi
+    def _segment_user_id(self):
+        # TODO: use a helper in analytic_segment if it's possible...
+        if self.env.user.id == 1:
+            for obj in self:
+                obj.segment_user_id = self.env.uid
+        else:
+            # add users segments
+            segment_tmpl_ids = []
+            segment_ids = self.env.user.segment_ids
+            for s in segment_ids:
+                segment_tmpl_ids += [s.segment_id.segment_tmpl_id.id]
+                segment_tmpl_ids += s.segment_id.segment_tmpl_id.get_childs_ids()
+            # add virtual companies segments
+            virtual_segments = self.env['analytic_segment.template'].search([('virtual', '=', True)])
+            segment_tmpl_ids += [i.id for i in virtual_segments]
+
+            # mark segments with user id
+            segment_ids = self.env['analytic_segment.segment'].search([('segment_tmpl_id', 'in', segment_tmpl_ids)])
+            #print 'SEGMENT_IDS ->', segment_ids
+            for obj in self:
+                if obj.segment_id in segment_ids:
+                    obj.segment_user_id = self.env.uid
+
     segment_id = fields.Many2one('analytic_segment.segment', domain=_domain_segment, required=True, default=_get_default_segment_from_user) #, required=True)
     segment = fields.Char(related='segment_id.segment', readonly=True)
     campaign_segment = fields.Boolean(related='segment_id.is_campaign')
+    segment_user_id = fields.Many2one('res.users', compute='_segment_user_id', search=_search_segment_user)
+
 
 class account_journal(models.Model):
     _inherit = 'account.journal'
@@ -215,9 +339,49 @@ class account_journal(models.Model):
             domain = [('id', 'in', [i.id for i in segment_ids])]
         return domain
 
+    def _search_segment_user(self, operator, value):
+        user = self.env['res.users'].browse(value)
+        segment_tmpl_ids = []
+        segment_ids = user.segment_ids
+        for s in segment_ids:
+            segment_tmpl_ids += [s.segment_id.segment_tmpl_id.id]
+            segment_tmpl_ids += s.segment_id.segment_tmpl_id.get_childs_ids()
+        virtual_segments = self.env['analytic_segment.template'].search([('virtual', '=', True)])
+        segment_tmpl_ids += [i.id for i in virtual_segments]
+
+        segment_ids = self.env['analytic_segment.segment'].search([('segment_tmpl_id', 'in', segment_tmpl_ids)])
+        filter = [('segment_id', 'in', [i.id for i in segment_ids])]
+        #print 'FILTER ->', filter, operator, value
+        return filter
+
+    @api.multi
+    def _segment_user_id(self):
+        # TODO: use a helper in analytic_segment if it's possible...
+        if self.env.user.id == 1:
+            for obj in self:
+                obj.segment_user_id = self.env.uid
+        else:
+            # add users segments
+            segment_tmpl_ids = []
+            segment_ids = self.env.user.segment_ids
+            for s in segment_ids:
+                segment_tmpl_ids += [s.segment_id.segment_tmpl_id.id]
+                segment_tmpl_ids += s.segment_id.segment_tmpl_id.get_childs_ids()
+            # add virtual companies segments
+            virtual_segments = self.env['analytic_segment.template'].search([('virtual', '=', True)])
+            segment_tmpl_ids += [i.id for i in virtual_segments]
+
+            # mark segments with user id
+            segment_ids = self.env['analytic_segment.segment'].search([('segment_tmpl_id', 'in', segment_tmpl_ids)])
+            #print 'SEGMENT_IDS ->', segment_ids
+            for obj in self:
+                if obj.segment_id in segment_ids:
+                    obj.segment_user_id = self.env.uid
+
     segment_id = fields.Many2one('analytic_segment.segment', domain=_domain_segment) #, required=True)
     segment = fields.Char(related='segment_id.segment', readonly=True)
     check_segment_id = fields.Boolean('Check segment', help='If active, it will check if invoice/move <=> journal segment are the same')
+    segment_user_id = fields.Many2one('res.users', compute='_segment_user_id', search=_search_segment_user)
 
 
 class AccountVoucher(models.Model):
