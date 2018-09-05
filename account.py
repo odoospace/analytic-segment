@@ -44,8 +44,9 @@ class account_move(models.Model):
             segment_tmpl_ids = []
             segment_ids = self.env.user.segment_ids
             for s in segment_ids:
-                segment_tmpl_ids += [s.segment_id.segment_tmpl_id.id]
-                segment_tmpl_ids += s.segment_id.segment_tmpl_id.get_childs_ids()
+                if not s.segment_id.blocked:
+                    segment_tmpl_ids += [s.segment_id.segment_tmpl_id.id]
+                    segment_tmpl_ids += s.segment_id.segment_tmpl_id.get_childs_ids()
             # virtual_segments = self.env['analytic_segment.template'].search([('virtual', '=', True)])
             # segment_tmpl_ids += [i.id for i in virtual_segments]
 

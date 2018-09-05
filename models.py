@@ -199,7 +199,7 @@ class analytic_segment(models.Model):
 
     display_name = fields.Char(compute=display_name, store=True, string="Name")
     segment_tmpl_id = fields.Many2one('analytic_segment.template', ondelete="cascade", required=True)
-    segment = fields.Char(compute="_get_fullcode", readonly=True)
+    segment = fields.Char(compute="_get_fullcode", readonly=True, store=True)
     campaign_id = fields.Many2one('analytic_segment.campaign')
     is_campaign = fields.Boolean(compute='_is_campaign')
     user_ids = fields.One2many('analytic_segment.user', 'segment_id')
@@ -230,8 +230,9 @@ class analytic_segment_user(models.Model):
         for obj in self:
             segment_tmpl_ids = []
             for s in obj.company_id.segment_ids:
-                segment_tmpl_ids += [s.segment_tmpl_id.id]
-                segment_tmpl_ids += s.segment_tmpl_id.get_childs_ids()
+                if not s.blocked:
+                    segment_tmpl_ids += [s.segment_tmpl_id.id]
+                    segment_tmpl_ids += s.segment_tmpl_id.get_childs_ids()
             segments = obj.env['analytic_segment.segment'].search([('segment_tmpl_id', 'in', segment_tmpl_ids)])
             obj.company_segment_ids = segments
 
