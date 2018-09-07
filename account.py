@@ -99,7 +99,7 @@ class account_move(models.Model):
                 if obj.segment_id in segment_ids:
                     obj.segment_user_id = self.env.uid
 
-    segment_id = fields.Many2one('analytic_segment.segment', domain=_domain_segment, required=True, default=_get_default_segment_from_user) #)
+    segment_id = fields.Many2one('analytic_segment.segment', index=True, domain=_domain_segment, required=True, default=_get_default_segment_from_user) #)
     segment = fields.Char(related='segment_id.segment', readonly=True)
     campaign_segment = fields.Boolean(related='segment_id.is_campaign')
     segment_user_id = fields.Many2one('res.users', compute='_segment_user_id', search=_search_segment_user)

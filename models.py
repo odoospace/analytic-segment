@@ -88,11 +88,36 @@ class analytic_template(models.Model):
             if not error:
                 self.segment = '.'.join(newfullcode)
 
+    # TODO: clean up SQL part
+
     @api.model
     def get_childs(self, level=0):
+        # https://wiki.postgresql.org/wiki/Getting_list_of_all_children_from_adjacency_tree
         """return a list with childrens, grandchildrens, etc."""
         res = []
-        for obj in self.child_ids:
+
+	    SQL = """
+            WITH RECURSIVE tree AS (
+            SELECT id, ARRAY[]::INTEGER[] AS ancestors 
+            FROM analytic_segment_template WHERE parent_id IS NULL
+            
+            UNION ALL
+            
+            SELECT t.id, tree.ancestors || t.parent_id
+            FROM analytic_segment_template as t, tree
+            WHERE t.parent_id = tree.id
+            ) SELECT * FROM tree WHERE %s = ANY(tree.ancestors) AND blocked is false;
+        """ % self.id
+
+        self.env.cr.execute(SQL)
+        ids = [i[0] for i in self.env.cr.fetchall()]
+        return self.browse(ids)
+
+
+        #childs = self.search([['parent_id','=', self.id], ['blocked', '=', False]])
+        print '>>>', self.id, SQL, childs
+        stop
+        for obj in childs: #child_ids
             if (level==0 or obj.level <= level) and not obj.blocked:
                 res.append(obj)
                 more_childs = obj.get_childs(level=level) # recursive!
@@ -104,6 +129,24 @@ class analytic_template(models.Model):
     @api.model
     def get_childs_ids(self, level=0):
         """return a list with ids of childrens, grandchildrens, etc."""
+        SQL = """
+            WITH RECURSIVE tree AS (
+            SELECT id, ARRAY[]::INTEGER[] AS ancestors
+            FROM analytic_segment_template WHERE parent_id IS NULL
+
+            UNION ALL
+
+            SELECT t.id, tree.ancestors || t.parent_id
+            FROM analytic_segment_template as t, tree
+            WHERE t.parent_id = tree.id and t.blocked is false
+            ) SELECT * FROM tree WHERE %s = ANY(tree.ancestors);
+        """ % self.id
+
+        self.env.cr.execute(SQL)
+        ids = [i[0] for i in self.env.cr.fetchall()]
+        return ids
+        
+        stop
         res = []
         for obj in self.child_ids:
             if (level==0 or obj.level <= level) and not obj.blocked:
@@ -136,7 +179,7 @@ class analytic_template(models.Model):
     virtual = fields.Boolean(default=False) # everyone can use virtual segments
     special = fields.Boolean(default=False) # for campaigns (set level depth to 2)
     blocked = fields.Boolean(default=False)
-    parent_id = fields.Many2one('analytic_segment.template')
+    parent_id = fields.Many2one('analytic_segment.template', index=True)
     child_ids = fields.One2many('analytic_segment.template', 'parent_id')
     # one2manys to core models
     analytic_ids = fields.One2many('account.analytic.account', 'segment_id')
@@ -198,7 +241,7 @@ class analytic_segment(models.Model):
                 obj.display_name = obj.segment_tmpl_id.display_name
 
     display_name = fields.Char(compute=display_name, store=True, string="Name")
-    segment_tmpl_id = fields.Many2one('analytic_segment.template', ondelete="cascade", required=True)
+    segment_tmpl_id = fields.Many2one('analytic_segment.template', index=True, ondelete="cascade", required=True)
     segment = fields.Char(compute="_get_fullcode", readonly=True, store=True)
     campaign_id = fields.Many2one('analytic_segment.campaign')
     is_campaign = fields.Boolean(compute='_is_campaign')
