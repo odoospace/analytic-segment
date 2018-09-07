@@ -61,7 +61,7 @@ class account_analytic_account(models.Model):
                 if obj.segment_id in segment_ids:
                     obj.segment_user_id = self.env.uid
             
-    segment_id = fields.Many2one('analytic_segment.segment') #, required=True)
+    segment_id = fields.Many2one('analytic_segment.segment', index=True) #, required=True)
     segment = fields.Char(related='segment_id.segment', readonly=True)
     segment_user_id = fields.Many2one('res.users', compute='_segment_user_id', search=_search_segment_user)
 
