@@ -96,7 +96,7 @@ class analytic_template(models.Model):
         """return a list with childrens, grandchildrens, etc."""
         res = []
 
-	    SQL = """
+        SQL = """
             WITH RECURSIVE tree AS (
             SELECT id, ARRAY[]::INTEGER[] AS ancestors 
             FROM analytic_segment_template WHERE parent_id IS NULL
@@ -145,7 +145,7 @@ class analytic_template(models.Model):
         self.env.cr.execute(SQL)
         ids = [i[0] for i in self.env.cr.fetchall()]
         return ids
-        
+
         stop
         res = []
         for obj in self.child_ids:
