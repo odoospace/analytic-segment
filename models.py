@@ -111,8 +111,11 @@ class analytic_template(models.Model):
 
         self.env.cr.execute(SQL)
         ids = [i[0] for i in self.env.cr.fetchall()]
+        return ids
         return self.browse(ids)
 
+        #DEAD CODE!!!!review and delete please!
+        #DEAD CODE!!!!review and delete please!
 
         #childs = self.search([['parent_id','=', self.id], ['blocked', '=', False]])
         print '>>>', self.id, SQL, childs
@@ -146,6 +149,8 @@ class analytic_template(models.Model):
         ids = [i[0] for i in self.env.cr.fetchall()]
         return ids
 
+        #DEAD CODE!!!!review and delete please!
+        #DEAD CODE!!!!review and delete please!
         # stop
         res = []
         for obj in self.child_ids:
@@ -324,9 +329,9 @@ class analytic_segment_campaign(models.Model):
         if segment_top:
             if segment_top.special:
                 # only this one, without childs
-                segments = [segment_top] + segment_top.get_childs(level=3)
+                segments = [segment_top.id] + segment_top.get_childs(level=3)
             else:
-                segments = [segment_top] + segment_top.get_childs()
+                segments = [segment_top.id] + segment_top.get_childs()
             # remove segments
             for s in self.segment_ids:
                 s.unlink()
@@ -335,7 +340,7 @@ class analytic_segment_campaign(models.Model):
             for s in segments:
                 vals = {
                     'campaign_id': self.id,
-                    'segment_tmpl_id': s.id
+                    'segment_tmpl_id': s
                 }
                 n = self.env['analytic_segment.segment'].create(vals)
                 s_ids.append(n.id)
@@ -349,9 +354,9 @@ class analytic_segment_campaign(models.Model):
             segment_top = self.env['analytic_segment.template'].browse(values['segment_top'])
             if segment_top.special:
                 # only this one, without childs
-                segments = [segment_top] + segment_top.get_childs(level=3)
+                segments = [segment_top.id] + segment_top.get_childs(level=3)
             else:
-                segments = [segment_top] + segment_top.get_childs()
+                segments = [segment_top.id] + segment_top.get_childs()
             # remove segments
             for s in self.segment_ids:
                 s.unlink()
@@ -360,7 +365,7 @@ class analytic_segment_campaign(models.Model):
             for s in segments:
                 vals = {
                     'campaign_id': self.id,
-                    'segment_tmpl_id': s.id
+                    'segment_tmpl_id': s
                 }
                 n = self.env['analytic_segment.segment'].create(vals)
                 s_ids.append(n.id)
