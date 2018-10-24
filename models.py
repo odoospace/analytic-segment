@@ -105,8 +105,8 @@ class analytic_template(models.Model):
             
             SELECT t.id, tree.ancestors || t.parent_id
             FROM analytic_segment_template as t, tree
-            WHERE t.parent_id = tree.id
-            ) SELECT * FROM tree WHERE %s = ANY(tree.ancestors) AND blocked is false;
+            WHERE t.parent_id = tree.id and t.blocked is false
+            ) SELECT * FROM tree WHERE %s = ANY(tree.ancestors);
         """ % self.id
 
         self.env.cr.execute(SQL)
@@ -116,7 +116,7 @@ class analytic_template(models.Model):
 
         #childs = self.search([['parent_id','=', self.id], ['blocked', '=', False]])
         print '>>>', self.id, SQL, childs
-        stop
+        # stop
         for obj in childs: #child_ids
             if (level==0 or obj.level <= level) and not obj.blocked:
                 res.append(obj)
@@ -146,7 +146,7 @@ class analytic_template(models.Model):
         ids = [i[0] for i in self.env.cr.fetchall()]
         return ids
 
-        stop
+        # stop
         res = []
         for obj in self.child_ids:
             if (level==0 or obj.level <= level) and not obj.blocked:
