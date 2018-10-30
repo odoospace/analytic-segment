@@ -20,16 +20,6 @@ class analytic_template(models.Model):
         for obj in self:
             obj.display_name = '%s [%s]' % (obj.name, obj.type_id.name)
 
-    """
-    @api.multi
-    def name_get(self):
-        res = []
-        for obj in self:
-            name = '%s [%s]' % (obj.name, obj.type_id.name)
-            res.append((obj.id, name))
-        return res
-    """
-
     @api.onchange('type_id')
     def _set_level(self):
         # only select stuff from your upper level
@@ -50,7 +40,6 @@ class analytic_template(models.Model):
             level += 1
             parent = parent.parent_id
         self.level = level
-
 
     @api.depends('parent_id', 'code', 'type_id')
     @api.one
@@ -89,7 +78,6 @@ class analytic_template(models.Model):
                 self.segment = '.'.join(newfullcode)
 
     # TODO: clean up SQL part
-
     @api.model
     def get_childs(self, level=0):
         # https://wiki.postgresql.org/wiki/Getting_list_of_all_children_from_adjacency_tree
@@ -112,22 +100,6 @@ class analytic_template(models.Model):
         self.env.cr.execute(SQL)
         ids = [i[0] for i in self.env.cr.fetchall()]
         return ids
-        return self.browse(ids)
-
-        #DEAD CODE!!!!review and delete please!
-        #DEAD CODE!!!!review and delete please!
-
-        #childs = self.search([['parent_id','=', self.id], ['blocked', '=', False]])
-        print '>>>', self.id, SQL, childs
-        # stop
-        for obj in childs: #child_ids
-            if (level==0 or obj.level <= level) and not obj.blocked:
-                res.append(obj)
-                more_childs = obj.get_childs(level=level) # recursive!
-                if more_childs:
-                    for child in more_childs:
-                        res.append(child)
-        return res
 
     @api.model
     def get_childs_ids(self, level=0):
@@ -148,19 +120,6 @@ class analytic_template(models.Model):
         self.env.cr.execute(SQL)
         ids = [i[0] for i in self.env.cr.fetchall()]
         return ids
-
-        #DEAD CODE!!!!review and delete please!
-        #DEAD CODE!!!!review and delete please!
-        # stop
-        res = []
-        for obj in self.child_ids:
-            if (level==0 or obj.level <= level) and not obj.blocked:
-                res.append(obj.id)
-                more_childs = obj.get_childs(level=level) # recursive!
-                if more_childs:
-                    for child in more_childs:
-                        res.append(child.id)
-        return res
 
     @api.model
     def create(self, values):
