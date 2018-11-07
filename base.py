@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 # use res_users and res_company with analytic accounts
 
-from openerp import models, fields, api
+from openerp import models, fields, api, _
 from lxml import etree
 
 class res_users(models.Model):
@@ -15,7 +15,7 @@ class res_users(models.Model):
             print 'Recalculating user:', user
             ids_to_write = []
             segment_tmpl_ids = []
-            segment_ids = self.env['res.users'].browse([('id', '=', user)]).segment_ids
+            segment_ids = self.env['res.users'].browse(user.id).segment_ids
             for s in segment_ids:
                 segment_tmpl_ids += [s.segment_id.segment_tmpl_id.id]
                 segment_tmpl_ids += s.segment_id.segment_tmpl_id.get_childs_ids()
@@ -27,7 +27,7 @@ class res_users(models.Model):
             segment_ids = self.env['analytic_segment.segment'].search([('segment_tmpl_id', 'in', segment_tmpl_ids)])
             for segment in segment_ids:
                 ids_to_write.append(segment.id)
-            self.env['res.users'].write(user, {'segment_segment_ids': (6, _, ids_to_write)})
+            user.write({'segment_segment_ids': (6, _, [ids_to_write])})
 
 
     segment_segment_ids = fields.Many2many('analytic_segment.segment', 'segment_user_rel', string='Segments segments')
