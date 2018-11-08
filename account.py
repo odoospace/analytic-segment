@@ -36,6 +36,7 @@ class account_move(models.Model):
                     raise ValidationError("Segment differs between journal and move!")
             if not self.segment_id:
                 raise ValidationError("You must set a segment!")
+        return
 
     def _domain_segment(self):
         if self.env.user.id == 1:
@@ -123,6 +124,7 @@ class account_invoice(models.Model):
                 self.account_id = self.env.user.company_id.account_associate.id
             else:
                 self.account_id = self.env.user.company_id.account_provider.id
+        return
 
     @api.multi
     def write(self, vals):
@@ -178,6 +180,7 @@ class account_invoice(models.Model):
                     raise ValidationError("Segment differs between journal and invoice!")
             if not self.segment_id:
                 raise ValidationError("You must set a segment!")
+        return
 
     def _domain_segment(self):
         # TODO: refactor these 3 functions!!!!
@@ -225,6 +228,7 @@ class account_journal(models.Model):
         if not self.env.user.has_group('analytic_segment.group_analyticsegments_norestrictions'):
             if not self.segment_id:
                 raise ValidationError("You must set a Segment!")
+        return
 
     def _domain_segment(self):
         # TODO: refactor these 3 functions!!!!

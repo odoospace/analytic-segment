@@ -19,6 +19,7 @@ class analytic_template(models.Model):
         res = []
         for obj in self:
             obj.display_name = '%s [%s]' % (obj.name, obj.type_id.name)
+        return
 
     @api.onchange('type_id')
     def _set_level(self):
@@ -40,6 +41,7 @@ class analytic_template(models.Model):
             level += 1
             parent = parent.parent_id
         self.level = level
+        return level
 
     @api.depends('parent_id', 'code', 'type_id')
     @api.one
@@ -76,6 +78,7 @@ class analytic_template(models.Model):
             
             if not error:
                 self.segment = '.'.join(newfullcode)
+        return
 
     # TODO: clean up SQL part
     @api.model
@@ -162,6 +165,7 @@ class analytic_segment(models.Model):
     def _is_campaign(self):
         for obj in self:
             obj.is_campaign = obj.campaign_id and True or False
+        return
 
     # override this function from template to add 3 if campaign is True
     @api.depends('parent_id', 'code', 'type_id', 'campaign_id', 'is_campaign')
@@ -193,6 +197,7 @@ class analytic_segment(models.Model):
                 newfullcode.append(PATTERN[2] % int(self.code))
 
             self.segment = '.'.join(newfullcode)
+        return
 
     @api.depends('campaign_id', 'segment_tmpl_id')
     @api.multi
@@ -203,6 +208,7 @@ class analytic_segment(models.Model):
                 obj.display_name = '%s <%s>' % (obj.segment_tmpl_id.display_name, obj.campaign_id.name)
             else:
                 obj.display_name = obj.segment_tmpl_id.display_name
+        return
 
     display_name = fields.Char(compute=display_name, store=True, string="Name")
     segment_tmpl_id = fields.Many2one('analytic_segment.template', index=True, ondelete="cascade", required=True)
@@ -242,6 +248,7 @@ class analytic_segment_user(models.Model):
                     segment_tmpl_ids += s.segment_tmpl_id.get_childs_ids()
             segments = obj.env['analytic_segment.segment'].search([('segment_tmpl_id', 'in', segment_tmpl_ids)])
             obj.company_segment_ids = segments
+        return
 
     @api.onchange('company_id')
     def company_id_onchange(self):

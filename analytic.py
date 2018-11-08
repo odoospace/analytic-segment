@@ -60,6 +60,7 @@ class account_analytic_account(models.Model):
             for obj in self:
                 if obj.segment_id in segment_ids:
                     obj.segment_user_id = self.env.uid
+        return
             
     segment_id = fields.Many2one('analytic_segment.segment', index=True) #, required=True)
     segment = fields.Char(related='segment_id.segment', readonly=True)

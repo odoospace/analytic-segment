@@ -35,6 +35,7 @@ class res_users(models.Model):
                 print user, 'segmetns updated!', ids_to_write, usr_segments
             else:
                 print user, 'segments matches!', ids_to_write, usr_segments
+        return
 
 
     segment_segment_ids = fields.Many2many('analytic_segment.segment', 'segment_user_rel', string='Segments segments')
