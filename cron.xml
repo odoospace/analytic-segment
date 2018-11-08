@@ -1,5 +1,5 @@
 <openerp>
-    <data noupdate="1">
+    <data noupdate="0">
         <record id="ir_cron_sync_move_segments" model="ir.cron">
             <field name="name">Sync move segments</field>
             <field name="user_id" ref="base.user_root"/>
@@ -20,7 +20,7 @@
             <field name="interval_type">minutes</field>
             <field name="numbercall">-1</field>
             <field eval="False" name="doall"/>
-            <field eval="'res.user'" name="model"/>
+            <field eval="'res.users'" name="model"/>
             <field eval="'recalculate_user_segments'" name="function"/>
         </record>
    </data>

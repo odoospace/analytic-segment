@@ -27,7 +27,14 @@ class res_users(models.Model):
             segment_ids = self.env['analytic_segment.segment'].search([('segment_tmpl_id', 'in', segment_tmpl_ids)])
             for segment in segment_ids:
                 ids_to_write.append(segment.id)
-            user.write({'segment_segment_ids': (6, _, [ids_to_write])})
+            usr_segments = [i.id for i in user.segment_segment_ids]
+            if not (set(ids_to_write) == set(usr_segments)):
+                user.segment_segment_ids = None
+                #user.write({'segment_segment_ids': (6, _, [ids_to_write])})
+                user.segment_segment_ids = segment_ids
+                print user, 'segmetns updated!', ids_to_write, usr_segments
+            else:
+                print user, 'segments matches!', ids_to_write, usr_segments
 
 
     segment_segment_ids = fields.Many2many('analytic_segment.segment', 'segment_user_rel', string='Segments segments')
