@@ -25,18 +25,6 @@ class account_analytic_account(models.Model):
     def _search_segment_user(self, operator, value):
         user = self.env['res.users'].browse(value)
         return [('segment_id', 'in', [i.id for i in user.segment_segment_ids])]
-        segment_tmpl_ids = []
-        segment_ids = user.segment_ids
-        for s in segment_ids:
-            segment_tmpl_ids += [s.segment_id.segment_tmpl_id.id]
-            segment_tmpl_ids += s.segment_id.segment_tmpl_id.get_childs_ids()
-        virtual_segments = self.env['analytic_segment.template'].search([('virtual', '=', True)])
-        segment_tmpl_ids += [i.id for i in virtual_segments]
-
-        segment_ids = self.env['analytic_segment.segment'].search([('segment_tmpl_id', 'in', segment_tmpl_ids)])
-        filter = [('segment_id', 'in', [i.id for i in segment_ids])]
-        #print 'FILTER ->', filter, operator, value
-        return filter
 
     @api.multi
     def _segment_user_id(self):
@@ -48,23 +36,6 @@ class account_analytic_account(models.Model):
             for obj in self:
                 if obj.segment_id in self.env.user.segment_segment_ids:
                     obj.segment_user_id = self.env.uid
-        # else:
-        #     # add users segments
-        #     segment_tmpl_ids = []
-        #     segment_ids = self.env.user.segment_ids
-        #     for s in segment_ids:
-        #         segment_tmpl_ids += [s.segment_id.segment_tmpl_id.id]
-        #         segment_tmpl_ids += s.segment_id.segment_tmpl_id.get_childs_ids()
-        #     # add virtual companies segments
-        #     virtual_segments = self.env['analytic_segment.template'].search([('virtual', '=', True)])
-        #     segment_tmpl_ids += [i.id for i in virtual_segments]
-
-        #     # mark segments with user id
-        #     segment_ids = self.env['analytic_segment.segment'].search([('segment_tmpl_id', 'in', segment_tmpl_ids)])
-        #     #print 'SEGMENT_IDS ->', segment_ids
-        #     for obj in self:
-        #         if obj.segment_id in segment_ids:
-        #             obj.segment_user_id = self.env.uid
         return
             
     segment_id = fields.Many2one('analytic_segment.segment', index=True) #, required=True)

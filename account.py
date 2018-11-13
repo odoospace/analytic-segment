@@ -18,14 +18,14 @@ class account_move(models.Model):
             vals['segment_id'] = context["invoice"].segment_id.id
         return super(account_move, self).create(vals)
 
-    @api.multi
-    def write(self, vals):
-        result = super(account_move, self).write(vals)
-        inv = self.env['account.invoice'].search([('number', '=' , self.ref)])
-        if self.line_id:
-            values = {"segment_id": self.segment_id.id}
-            self.line_id.write(values)
-        return result
+    # @api.multi
+    # def write(self, vals):
+    #     result = super(account_move, self).write(vals)
+    #     inv = self.env['account.invoice'].search([('number', '=' , self.ref)])
+    #     if self.line_id:
+    #         values = {"segment_id": self.segment_id.id}
+    #         self.line_id.write(values)
+    #     return result
 
     @api.one
     @api.constrains('segment_id', 'journal_id')
