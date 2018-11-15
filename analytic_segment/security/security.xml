@@ -1,0 +1,51 @@
+<openerp>
+    <data>
+
+        <record model="res.groups" id="group_analyticsegments_norestrictions">
+            <field name="name">NO segments restrictions</field>
+            <field name="category_id" ref="base.module_category_hidden"/>
+        </record>
+        <!-- BEGIN TERRITORIAL SACCES RULES -->
+        <record id="see_only_visible_journal_segment" model="ir.rule">
+            <field name="name">See only territorial visible account journal segment</field>
+            <field name="model_id" ref="model_account_journal"/>
+            <field name="perm_read" eval="1"/>
+            <field name="perm_write" eval="1"/>
+            <field name="perm_create" eval="1"/>
+            <field name="perm_unlink" eval="1"/>
+            <field name="domain_force">['&amp;',('segment_user_id','=',user.id),('company_id','child_of',[user.company_id.id])]</field>
+        </record>
+
+        <record id="see_only_visible_invoice_segment" model="ir.rule">
+            <field name="name">See only territorial visible invoice segment</field>
+            <field name="model_id" ref="model_account_invoice"/>
+            <field name="perm_read" eval="1"/>
+            <field name="perm_write" eval="1"/>
+            <field name="perm_create" eval="1"/>
+            <field name="perm_unlink" eval="1"/>
+            <field name="domain_force">['&amp;',('segment_user_id','=',user.id),('company_id','child_of',[user.company_id.id])]</field>
+        </record>
+
+        <record id="see_only_visible_move_segment" model="ir.rule">
+          <field name="name">See only territorial visible move segment</field>
+            <field name="model_id" ref="model_account_move"/>
+            <field name="perm_read" eval="1"/>
+            <field name="perm_write" eval="1"/>
+            <field name="perm_create" eval="1"/>
+            <field name="perm_unlink" eval="1"/>
+            <field name="domain_force">['&amp;',('segment_user_id','=',user.id),('company_id','child_of',[user.company_id.id])]</field>
+        </record>
+
+        <record id="see_only_visible_move_line_segment" model="ir.rule">
+          <field name="name">See only territorial visible move line segment</field>
+            <field name="model_id" ref="model_account_move_line"/>
+            <field name="perm_read" eval="1"/>
+            <field name="perm_write" eval="1"/>
+            <field name="perm_create" eval="1"/>
+            <field name="perm_unlink" eval="1"/>
+            <field name="domain_force">['&amp;',('segment_user_id','=',user.id),('company_id','child_of',[user.company_id.id])]</field>
+        </record>
+        <!-- END TERRITORIAL SECURITY GROUP AND ACCES RULES -->
+    </data>
+</openerp>
+
