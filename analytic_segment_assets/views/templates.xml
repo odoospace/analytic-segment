@@ -1,0 +1,20 @@
+<openerp>
+    <data>
+      <!-- BEGIN: analytic segment assets -->
+
+      <record id="view_account_asset_asset_form_as" model="ir.ui.view">
+            <field name="name">account.asset.asset.form.as</field>
+            <field name="model">account.asset.asset</field>
+            <field name="inherit_id" ref="account_asset.view_account_asset_asset_form"/>
+            <field name="arch" type="xml">
+                <field name="category_id" position="before">
+                    <field name="segment_id"/>
+                    <field name="segment"/>
+                    <field name="campaign_segment" readonly='1'/>
+                </field>
+            </field>
+        </record>
+      
+
+    </data>
+</openerp>
