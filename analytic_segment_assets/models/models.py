@@ -156,11 +156,11 @@ class account_invoice_line(osv.osv):
                 #FORWARDPORT UP TO SAAS-6
                 #add functionality to generate multiple assets based on the units of the line
                 line_units = line.quantity
-                for x in range(1, line_units+1):
+                for x in range(1, int(line_units)+1):
                     sign = -1 if line.invoice_id.type in ("in_refund", 'out_refund') else 1
                     name = line.name
                     if line_units != 1:
-                        name = line.name + ' ' + str(x) + '/' + str(line_units)
+                        name = line.name + ' ' + str(x) + '/' + str(int(line_units))
                     vals = {
                         'name': name,
                         'code': line.invoice_id.number or False,
