@@ -154,23 +154,29 @@ class account_invoice_line(osv.osv):
         for line in lines:
             if line.asset_category_id:
                 #FORWARDPORT UP TO SAAS-6
-                sign = -1 if line.invoice_id.type in ("in_refund", 'out_refund') else 1
-                vals = {
-                    'name': line.name,
-                    'code': line.invoice_id.number or False,
-                    'category_id': line.asset_category_id.id,
-                    'purchase_value': sign * line.price_subtotal,
-                    'partner_id': line.invoice_id.partner_id.id,
-                    'company_id': line.invoice_id.company_id.id,
-                    'currency_id': line.invoice_id.currency_id.id,
-                    'purchase_date': line.invoice_id.date_invoice,
-                    'segment_id': line.invoice_id.segment_id.id,
-                    'note': line.invoice_id.comment
-                }
-                changed_vals = asset_obj.onchange_category_id(cr, uid, [], vals['category_id'], context=context)
-                vals.update(changed_vals['value'])
-                asset_id = asset_obj.create(cr, uid, vals, context=context)
-                if line.asset_category_id.open_asset:
-                    asset_obj.validate(cr, uid, [asset_id], context=context)
+                #add functionality to generate multiple assets based on the units of the line
+                line_units = line.quantity
+                for x in range(1, line_units+1):
+                    sign = -1 if line.invoice_id.type in ("in_refund", 'out_refund') else 1
+                    name = line.name
+                    if line_units != 1:
+                        name = line.name + ' ' str(x) + '/' + str(line_units)
+                    vals = {
+                        'name': name,
+                        'code': line.invoice_id.number or False,
+                        'category_id': line.asset_category_id.id,
+                        'purchase_value': sign * line.price_subtotal,
+                        'partner_id': line.invoice_id.partner_id.id,
+                        'company_id': line.invoice_id.company_id.id,
+                        'currency_id': line.invoice_id.currency_id.id,
+                        'purchase_date': line.invoice_id.date_invoice,
+                        'segment_id': line.invoice_id.segment_id.id,
+                        'note': line.invoice_id.comment
+                    }
+                    changed_vals = asset_obj.onchange_category_id(cr, uid, [], vals['category_id'], context=context)
+                    vals.update(changed_vals['value'])
+                    asset_id = asset_obj.create(cr, uid, vals, context=context)
+                    if line.asset_category_id.open_asset:
+                        asset_obj.validate(cr, uid, [asset_id], context=context)
         return True
 
