@@ -83,7 +83,7 @@ class account_asset_depreciation_line(osv.osv):
             amount = currency_obj.compute(cr, uid, current_currency, company_currency, line.amount, context=context)
             sign = (line.asset_id.category_id.journal_id.type == 'purchase' and 1) or -1
             asset_name = "/"
-            asset_name = "Amortización " + months_dict[datetime.strptime(depreciation_date, '%Y-%m-%d').month] + ' ' + datetime.strptime(depreciation_date, '%Y-%m-%d').year
+            asset_name = "Amortización " + months_dict[datetime.strptime(depreciation_date, '%Y-%m-%d').month] + ' ' + str(datetime.strptime(depreciation_date, '%Y-%m-%d').year)
             reference = line.asset_id.name
             move_vals = {
                 'name': asset_name,
