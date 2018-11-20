@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 # More simple segment model to use in odoo analytic and no analytic objects
 
+from openerp import SUPERUSER_ID
 from openerp import models, fields, api, _
 from openerp.exceptions import ValidationError, Warning
 from openerp.tools import float_compare
