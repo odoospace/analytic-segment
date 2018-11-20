@@ -165,7 +165,7 @@ class account_invoice_line(osv.osv):
                         'name': name,
                         'code': line.invoice_id.number or False,
                         'category_id': line.asset_category_id.id,
-                        'purchase_value': sign * line.price_subtotal,
+                        'purchase_value': sign * line.price_subtotal / line_units,
                         'partner_id': line.invoice_id.partner_id.id,
                         'company_id': line.invoice_id.company_id.id,
                         'currency_id': line.invoice_id.currency_id.id,
