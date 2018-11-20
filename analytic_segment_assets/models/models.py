@@ -5,6 +5,10 @@ from openerp import models, fields, api, _
 from openerp.exceptions import ValidationError, Warning
 from openerp.tools import float_compare
 from openerp.osv import osv
+import time
+import calendar
+from datetime import datetime
+from dateutil.relativedelta import relativedelta
 
 class AccountAssetAsset(models.Model):
     _inherit = 'account.asset.asset'
@@ -59,6 +63,8 @@ class account_asset_depreciation_line(osv.osv):
     _inherit = 'account.asset.depreciation.line'
 
     def create_move(self, cr, uid, ids, context=None):
+        months_dict = {1:'Enero', 2:'Febrero', 3:'Marzo', 4:'Abril', 5:'Mayo', 6:'Junio', 7:'Julio', 8:'Agosto', 
+            9:'Septiembre', 10:'Octubre', 11:'Noviembre', 12:'Diciembre'}
         context = dict(context or {})
         can_close = False
         asset_obj = self.pool.get('account.asset.asset')
@@ -77,6 +83,7 @@ class account_asset_depreciation_line(osv.osv):
             amount = currency_obj.compute(cr, uid, current_currency, company_currency, line.amount, context=context)
             sign = (line.asset_id.category_id.journal_id.type == 'purchase' and 1) or -1
             asset_name = "/"
+            asset_name = "Amortización " + months_dict[datetime.strptime(depreciation_date, '%Y-%m-%d').month] + ' ' + datetime.strptime(depreciation_date, '%Y-%m-%d').year
             reference = line.asset_id.name
             move_vals = {
                 'name': asset_name,
