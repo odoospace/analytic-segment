@@ -13,7 +13,7 @@
                     <field name="campaign_segment" readonly='1'/>
                 </field>
                 <xpath expr="//button[@name='set_to_draft']" position="after">
-                    <button name="set_to_open" states="close" string="Set to Draft" type="object" />
+                    <button name="set_to_open" states="close" string="Set to Open" type="object" />
                 </xpath>
                 <xpath expr="//field[@name='company_id']" position="after">
                     <field name="closure_date" string="Closure Date"/>
