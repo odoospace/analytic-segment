@@ -1,0 +1,17 @@
+<openerp>
+    <data>
+
+        <!-- BEGIN segments ACCES RULES -->
+        <record id="see_only_visible_assets_segment" model="ir.rule">
+            <field name="name">See only segments assets visisible</field>
+            <field name="model_id" ref="model_account_asset_asset"/>
+            <field name="perm_read" eval="1"/>
+            <field name="perm_write" eval="1"/>
+            <field name="perm_create" eval="1"/>
+            <field name="perm_unlink" eval="1"/>
+            <field name="domain_force">['&amp;',('segment_user_id','=',user.id),('company_id','child_of',[user.company_id.id])]</field>
+        </record>
+
+    </data>
+</openerp>
+
