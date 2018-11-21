@@ -54,11 +54,26 @@ class AccountAssetAsset(models.Model):
                     obj.segment_user_id = self.env.uid
             return
 
-
     segment_id = fields.Many2one('analytic_segment.segment', index=True, domain=_domain_segment, required=True, default=_get_default_segment_from_user) #)
     segment = fields.Char(related='segment_id.segment', readonly=True)
     campaign_segment = fields.Boolean(related='segment_id.is_campaign')
     segment_user_id = fields.Many2one('res.users', compute='_segment_user_id', search=_search_segment_user)
+    closure_date = fields.Date('Closure Date')
+
+    @api.multi
+    def set_to_open(self):
+        if self.closure_date:
+            self.closure_date = ''
+        self.state = 'open'
+        return
+
+    @api.multi
+    def set_to_close(self):
+        if not self.closure_date:
+            self.closure_date = time.strftime('%Y-%m-%d')
+        self.state = 'close'
+        return
+
 
 class account_asset_depreciation_line(osv.osv):
     _inherit = 'account.asset.depreciation.line'
