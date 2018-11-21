@@ -79,7 +79,7 @@ class account_asset_depreciation_line(osv.osv):
     _inherit = 'account.asset.depreciation.line'
 
     rel_purchase_date = fields.Date(related='asset_id.purchase_date')
-    rel_closure_date = fields.Date(related='asset_id.closure_date')
+    rel_closure_date = fields.Date(related='asset_id.closure_date', readonly=True)
 
     def create_move(self, cr, uid, ids, context=None):
         months_dict = {1:'Enero', 2:'Febrero', 3:'Marzo', 4:'Abril', 5:'Mayo', 6:'Junio', 7:'Julio', 8:'Agosto', 
