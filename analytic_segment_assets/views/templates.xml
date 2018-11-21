@@ -18,6 +18,11 @@
                 <xpath expr="//field[@name='company_id']" position="after">
                     <field name="closure_date" string="Closure Date"/>
                 </xpath>
+                <!-- TODO add colouring red to orfans amortizations  -->
+                <!-- red:(move_check == False and depreciation_date > purchase_date) -->
+                <xpath expr="/page[2]/field[@name='depreciation_line_ids']/tree" position="attributes">
+                    <attribute name="colors">red:(move_check == False and depreciation_date > rel_purchase_date);blue:(move_check == False);black:(move_check == True)</attribute>
+                </xpath>
             </field>
         </record>
       
