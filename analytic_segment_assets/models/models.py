@@ -58,7 +58,7 @@ class AccountAssetAsset(models.Model):
     segment = fields.Char(related='segment_id.segment', readonly=True)
     campaign_segment = fields.Boolean(related='segment_id.is_campaign')
     segment_user_id = fields.Many2one('res.users', compute='_segment_user_id', search=_search_segment_user)
-    closure_date = fields.Date('Closure Date')
+    closure_date = fields.Date(string='Closure Date', states={'close':[('readonly',True)]})
 
     @api.multi
     def set_to_open(self):
@@ -78,7 +78,8 @@ class AccountAssetAsset(models.Model):
 class account_asset_depreciation_line(osv.osv):
     _inherit = 'account.asset.depreciation.line'
 
-    rel_purchase_date = fields.Date(related='asset_id.purchase_date', store=True)
+    rel_purchase_date = fields.Date(related='asset_id.purchase_date')
+    rel_closure_date = fields.Date(related='asset_id.closure_date')
 
     def create_move(self, cr, uid, ids, context=None):
         months_dict = {1:'Enero', 2:'Febrero', 3:'Marzo', 4:'Abril', 5:'Mayo', 6:'Junio', 7:'Julio', 8:'Agosto', 
