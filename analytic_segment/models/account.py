@@ -70,7 +70,7 @@ class account_move(models.Model):
 
     segment_id = fields.Many2one('analytic_segment.segment', index=True, domain=_domain_segment, required=True, default=_get_default_segment_from_user) #)
     segment = fields.Char(related='segment_id.segment', readonly=True)
-    campaign_segment = fields.Boolean(related='segment_id.is_campaign')
+    campaign_segment = fields.Boolean(related='segment_id.is_campaign', readonly=True)
     segment_user_id = fields.Many2one('res.users', compute='_segment_user_id', search=_search_segment_user)
 
 
@@ -105,7 +105,7 @@ class account_move_line(models.Model):
 
     segment_id = fields.Many2one(related='move_id.segment_id', index=True, readonly=True, domain=_domain_segment)
     segment = fields.Char(related='segment_id.segment', readonly=True)
-    campaign_segment = fields.Boolean(related='move_id.campaign_segment')
+    campaign_segment = fields.Boolean(related='move_id.campaign_segment', readonly=True)
     segment_user_id = fields.Many2one('res.users', compute='_segment_user_id', search=_search_segment_user)
 
 
@@ -215,7 +215,7 @@ class account_invoice(models.Model):
 
     segment_id = fields.Many2one('analytic_segment.segment', domain=_domain_segment, required=True, default=_get_default_segment_from_user) #, required=True)
     segment = fields.Char(related='segment_id.segment', readonly=True)
-    campaign_segment = fields.Boolean(related='segment_id.is_campaign')
+    campaign_segment = fields.Boolean(related='segment_id.is_campaign', readonly=True)
     segment_user_id = fields.Many2one('res.users', compute='_segment_user_id', search=_search_segment_user)
 
 
