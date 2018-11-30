@@ -131,7 +131,7 @@ class account_asset_depreciation_line(osv.osv):
                 'date': depreciation_date,
             })
             move_line_obj.create(cr, uid, {
-                'name': asset_name,
+                'name': reference,
                 'ref': reference,
                 'move_id': move_id,
                 'account_id': line.asset_id.category_id.account_expense_depreciation_id.id,
