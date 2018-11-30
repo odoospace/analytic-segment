@@ -105,9 +105,9 @@ class account_asset_depreciation_line(osv.osv):
             asset_name = "Amortización " + months_dict[datetime.strptime(depreciation_date, '%Y-%m-%d').month] + ' ' + str(datetime.strptime(depreciation_date, '%Y-%m-%d').year)
             reference = line.asset_id.name
             move_vals = {
-                'name': asset_name,
+                'name': "/",
                 'date': depreciation_date,
-                'ref': reference,
+                'ref': asset_name,
                 'period_id': period_ids and period_ids[0] or False,
                 'journal_id': line.asset_id.category_id.journal_id.id,
                 'segment_id': line.asset_id.segment_id.id
