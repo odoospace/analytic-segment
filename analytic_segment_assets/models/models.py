@@ -107,7 +107,7 @@ class account_asset_depreciation_line(osv.osv):
             move_vals = {
                 'name': "/",
                 'date': depreciation_date,
-                'ref': asset_name,
+                'ref': reference,
                 'period_id': period_ids and period_ids[0] or False,
                 'journal_id': line.asset_id.category_id.journal_id.id,
                 'segment_id': line.asset_id.segment_id.id
@@ -131,7 +131,7 @@ class account_asset_depreciation_line(osv.osv):
                 'date': depreciation_date,
             })
             move_line_obj.create(cr, uid, {
-                'name': reference,
+                'name': asset_name,
                 'ref': reference,
                 'move_id': move_id,
                 'account_id': line.asset_id.category_id.account_expense_depreciation_id.id,
