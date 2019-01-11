@@ -22,7 +22,7 @@ class AccountInvoice(models.Model):
             for depreciation in asset.depreciation_line_ids:
                 if depreciation.move_check and depreciation.move_id:
                     raise ValidationError("Can't cancel invoice with related assets with depreciation executed. Cancel the depreciation first and try again")
-        return super(AcountInvoice, self).action_cancel()
+        return super(AccountInvoice, self).action_cancel()
 
 class AccountAssetAsset(models.Model):
     _inherit = 'account.asset.asset'
