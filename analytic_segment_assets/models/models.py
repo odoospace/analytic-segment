@@ -11,6 +11,19 @@ import calendar
 from datetime import datetime
 from dateutil.relativedelta import relativedelta
 
+
+class AccountInvoice(models.Model):
+    _inherit = 'account.invoice'
+
+    @api.multi
+    def action_cancel(self):
+        asset = self.env['account.asset.asset'].search([('company_id', '=', self.company_id.id),('code', '=', self.number)])
+        if asset:
+            for depreciation in asset.depreciation_line_ids:
+                if depreciation.move_check and depreciation.move_id:
+                    raise ValidationError("Can't cancel invoice with related assets with depreciation executed. Cancel the depreciation first and try again")
+        return super(AcountInvoice, self).action_cancel()
+
 class AccountAssetAsset(models.Model):
     _inherit = 'account.asset.asset'
 
@@ -154,6 +167,8 @@ class account_asset_depreciation_line(osv.osv):
             if currency_obj.is_zero(cr, uid, asset.currency_id, asset.value_residual):
                 asset.write({'state': 'close'})
         return created_move_ids
+
+
 
 
 class account_invoice_line(osv.osv):
