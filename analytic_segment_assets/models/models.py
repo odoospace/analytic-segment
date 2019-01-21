@@ -19,9 +19,10 @@ class AccountInvoice(models.Model):
     def action_cancel(self):
         asset = self.env['account.asset.asset'].search([('company_id', '=', self.company_id.id),('code', '=', self.number)])
         if asset:
-            for depreciation in asset.depreciation_line_ids:
-                if depreciation.move_check and depreciation.move_id:
-                    raise ValidationError("Can't cancel invoice with related assets with depreciation executed. Cancel the depreciation first and try again")
+            for ass in asset:
+                for depreciation in ass.depreciation_line_ids:
+                    if depreciation.move_check and depreciation.move_id:
+                        raise ValidationError("Can't cancel invoice with related assets with depreciation executed. Cancel the depreciation first and try again")
         return super(AccountInvoice, self).action_cancel()
 
 class AccountAssetAsset(models.Model):
