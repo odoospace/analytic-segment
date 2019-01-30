@@ -1,0 +1,16 @@
+<openerp>
+    <data>
+
+        <record id="view_payment_order_form_segment" model="ir.ui.view">
+            <field name="name">account.payment.order.form.banking-1.segment</field>
+            <field name="model">payment.order</field>
+            <field name="inherit_id" ref="account_banking_payment_export.view_payment_order_form"/>
+            <field name="arch" type="xml">
+                <xpath expr="//tree/field[1]" position="after">
+                    <field name="segment"/>
+                </xpath>
+            </field>
+        </record>
+
+    </data>
+</openerp>
