@@ -57,10 +57,7 @@ class PaymentOrderCreate(models.TransientModel):
                 ('reconcile_partial_id', '=', False),
             ]
 
-        if self.env.user.id == 1:
-            # no restrictions
-            continue
-        else:
+        if not self.env.user.id == 1:
             segment_tmpl_ids = []
             for s in self.segments:
                 segment_tmpl_ids += [s.segment_id.segment_tmpl_id.id]
