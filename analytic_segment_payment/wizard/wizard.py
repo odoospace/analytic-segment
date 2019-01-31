@@ -33,30 +33,11 @@ class PaymentOrderCreate(models.TransientModel):
     _inherit = 'payment.order.create'
 
     segments = fields.One2many('payment.order.create.segments', 'report_id',)
-
+    
     @api.multi
     def extend_payment_order_domain(self, payment_order, domain):
-        self.ensure_one()
-        if payment_order.payment_order_type == 'payment':
-            # For payables, propose all unreconciled credit lines,
-            # including partially reconciled ones.
-            # If they are partially reconciled with a supplier refund,
-            # the residual will be added to the payment order.
-            #
-            # For receivables, propose all unreconciled credit lines.
-            # (ie customer refunds): they can be refunded with a payment.
-            # Do not propose partially reconciled credit lines,
-            # as they are deducted from a customer invoice, and
-            # will not be refunded with a payment.
-            domain += [
-                ('credit', '>', 0),
-                '|',
-                ('account_id.type', '=', 'payable'),
-                '&',
-                ('account_id.type', '=', 'receivable'),
-                ('reconcile_partial_id', '=', False),
-            ]
-
+        super(PaymentOrderCreate, self).extend_payment_order_domain(
+            payment_order, domain)
         if not self.env.user.id == 1:
             segment_tmpl_ids = []
             for s in self.segments:
