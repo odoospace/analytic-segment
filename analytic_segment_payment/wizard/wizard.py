@@ -32,7 +32,29 @@ class PaymentOrderCreateSegments(models.TransientModel):
 class PaymentOrderCreate(models.TransientModel):
     _inherit = 'payment.order.create'
 
-    segments = fields.One2many('payment.order.create.segments', 'report_id',)
+
+    def _get_default_segments(self):
+        if not self.env.user.id == 1:
+            seg = False
+            for i in self.env.user.segment_ids:
+                if i.company_id == self.env.user.company_id:
+                    seg = i.segment_id
+                    break
+            #ugly hack...
+            #at this point the wizard don't exist, need to commit to get an id
+            self._cr.commit()
+            if seg:
+                data = {
+                    'report_id': self.id,
+                    'segment_id': seg.id,
+                    'with_children': True
+                }
+                return [(0, 0, data)]
+            else:
+                return None
+
+
+    segments = fields.One2many('payment.order.create.segments', 'report_id', default=_get_default_segments)
     
     @api.multi
     def extend_payment_order_domain(self, payment_order, domain):
