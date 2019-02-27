@@ -2,6 +2,8 @@
 # More simple segment model to use in odoo analytic and no analytic objects
 
 from openerp import models, fields, api
+from openerp.tools.translate import _
+from openerp.exceptions import ValidationError
 from random import random
 
 PATTERN = ['%i', '%02i', '%06i']
@@ -16,10 +18,8 @@ class analytic_template(models.Model):
     @api.depends('name', 'type_id')
     @api.multi
     def display_name(self):
-        res = []
         for obj in self:
             obj.display_name = '%s [%s]' % (obj.name, obj.type_id.name)
-        return
 
     @api.onchange('type_id')
     def _set_level(self):
@@ -85,7 +85,6 @@ class analytic_template(models.Model):
     def get_childs(self, level=0):
         # https://wiki.postgresql.org/wiki/Getting_list_of_all_children_from_adjacency_tree
         """return a list with childrens, grandchildrens, etc."""
-        res = []
 
         SQL = """
             WITH RECURSIVE tree AS (
@@ -146,6 +145,7 @@ class analytic_template(models.Model):
     virtual = fields.Boolean(default=False) # everyone can use virtual segments
     special = fields.Boolean(default=False) # for campaigns (set level depth to 2)
     blocked = fields.Boolean(default=False)
+    visible = fields.Boolean(default=False)
     parent_id = fields.Many2one('analytic_segment.template', index=True)
     child_ids = fields.One2many('analytic_segment.template', 'parent_id')
     # one2manys to core models
@@ -165,7 +165,6 @@ class analytic_segment(models.Model):
     def _is_campaign(self):
         for obj in self:
             obj.is_campaign = obj.campaign_id and True or False
-        return
 
     # override this function from template to add 3 if campaign is True
     @api.depends('parent_id', 'code', 'type_id', 'campaign_id', 'is_campaign')
@@ -197,18 +196,15 @@ class analytic_segment(models.Model):
                 newfullcode.append(PATTERN[2] % int(self.code))
 
             self.segment = '.'.join(newfullcode)
-        return
 
     @api.depends('campaign_id', 'segment_tmpl_id')
     @api.multi
     def display_name(self):
-        res = []
         for obj in self:
             if obj.campaign_id:
                 obj.display_name = '%s <%s>' % (obj.segment_tmpl_id.display_name, obj.campaign_id.name)
             else:
                 obj.display_name = obj.segment_tmpl_id.display_name
-        return
 
     display_name = fields.Char(compute=display_name, store=True, string="Name")
     segment_tmpl_id = fields.Many2one('analytic_segment.template', index=True, ondelete="cascade", required=True)
@@ -265,13 +261,26 @@ class analytic_segment_user(models.Model):
         self.segment_id = None
         return res
 
+    @api.onchange('campaign_default')
+    def campaign_default_onchange(self):
+        """check if campaign_id exists"""
+        if not self.campaign_id:
+            self.campaign_default = False
+
+    @api.one
+    @api.constrains('campaign_default')
+    def _check_campaign_defaults(self):
+        campaign_defaults = [obj.campaign_default for obj in self.user_id.segment_ids if obj.campaign_default]
+        if len(campaign_defaults) > 1:
+            raise ValidationError(_('Too many campaign default segments'))
+
     company_id = fields.Many2one('res.company')
     segment_id = fields.Many2one('analytic_segment.segment') #, domain="[('id', 'in', 'company_segment_ids[0][2]')]") # with campaign
     segment = fields.Char(related='segment_id.segment', readonly=True) #TODO: store
     campaign_id = fields.Many2one(related='segment_id.campaign_id', readonly=True) #TODO: store
     user_id = fields.Many2one('res.users')
     company_segment_ids = fields.One2many('analytic_segment.segment', compute='_company_segment_ids')
-
+    campaign_default = fields.Boolean()
 
 class analytic_segment_campaign(models.Model):
     _name = 'analytic_segment.campaign'
@@ -336,8 +345,8 @@ class analytic_segment_campaign(models.Model):
                 n = self.env['analytic_segment.segment'].create(vals)
                 s_ids.append(n.id)
             values['segment_ids'] = [(6, 0, s_ids)]
-        rec = super(analytic_segment_campaign, self).write(values)
-        return rec
+        res = super(analytic_segment_campaign, self).write(values)
+        return res
         
 
     # TODO: override create and write functions in order to generate segments with campaign info

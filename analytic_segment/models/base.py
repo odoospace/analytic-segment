@@ -36,6 +36,10 @@ class res_users(models.Model):
             else:
                 print user, 'segments matches!', ids_to_write, usr_segments
         return
+    
+    def get_campaign_default(self):
+        """return default campaign"""
+        return [obj for obj in self.segment_ids if obj.campaign_default][0]
 
 
     segment_segment_ids = fields.Many2many('analytic_segment.segment', 'segment_user_rel', string='Segments segments')

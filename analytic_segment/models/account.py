@@ -108,40 +108,6 @@ class account_move_line(models.Model):
     campaign_segment = fields.Boolean(related='move_id.campaign_segment', readonly=True)
     segment_user_id = fields.Many2one('res.users', compute='_segment_user_id', search=_search_segment_user)
 
-class AccountAnalyticLine(models.Model):
-    _inherit = 'account.analytic.line'
-
-    def _domain_segment(self):
-        # TODO: refactor these 3 functions!!!!
-        if self.env.user.id == 1:
-            # no restrictions
-            domain = []
-            return domain
-        else:
-            return [('id', 'in', [i.id for i in self.env.user.segment_segment_ids])]
-
-    def _search_segment_user(self, operator, value):
-        user = self.env['res.users'].browse(value)
-        return [('segment_id', 'in', [i.id for i in user.segment_segment_ids])]
-
-    @api.multi
-    def _segment_user_id(self):
-        # TODO: use a helper in analytic_segment if it's possible...
-        if self.env.user.id == 1:
-            for obj in self:
-                obj.segment_user_id = self.env.uid
-            return
-        else:
-            for obj in self:
-                if obj.segment_id in self.env.user.segment_segment_ids:
-                    obj.segment_user_id = self.env.uid
-            return
-
-    segment_id = fields.Many2one(related='move_id.move_id.segment_id', index=True, readonly=True, domain=_domain_segment)
-    segment = fields.Char(related='segment_id.segment', readonly=True)
-    campaign_segment = fields.Boolean(related='move_id.move_id.campaign_segment', readonly=True)
-    segment_user_id = fields.Many2one('res.users', compute='_segment_user_id')#, search=_search_segment_user)
-
 
 class account_invoice(models.Model):
     _inherit = 'account.invoice'
@@ -358,7 +324,7 @@ class AccountVoucher(models.Model):
                 'account_id': line.account_id.id,
                 'move_id': move_id,
                 'partner_id': voucher.partner_id.id,
-                'currency_id': line.move_line_id and (company_currency <> line.move_line_id.currency_id.id and line.move_line_id.currency_id.id) or False,
+                'currency_id': line.move_line_id and (company_currency != line.move_line_id.currency_id.id and line.move_line_id.currency_id.id) or False,
                 'analytic_account_id': line.account_analytic_id and line.account_analytic_id.id or False,
                 'quantity': 1,
                 'credit': 0.0,
