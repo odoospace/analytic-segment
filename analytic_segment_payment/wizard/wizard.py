@@ -36,10 +36,14 @@ class PaymentOrderCreate(models.TransientModel):
     def _get_default_segments(self):
         if not self.env.user.id == 1:
             seg = False
-            for i in self.env.user.segment_ids:
-                if i.company_id == self.env.user.company_id:
-                    seg = i.segment_id
-                    break
+            #add payment mode segments
+            order = self.env['payment.order'].search([('id', '=', self._context['active_id'])])
+            seg = order.mode.segment_id
+            #or add user segments
+            # for i in self.env.user.segment_ids:
+            #     if i.company_id == self.env.user.company_id:
+            #         seg = i.segment_id
+            #         break
             #ugly hack...
             #at this point the wizard don't exist, need to commit to get an id
             self._cr.commit()
