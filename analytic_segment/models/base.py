@@ -37,13 +37,23 @@ class res_users(models.Model):
                 print user, 'segments matches!', ids_to_write, usr_segments
         return
     
-    def get_campaign_default(self):
+    # TODO: use store
+    def _get_default_campaign_id(self):
         """return default campaign"""
-        return [obj for obj in self.segment_ids if obj.campaign_default][0]
+        res = [obj for obj in self.segment_ids if obj.campaign_default]
+        if res:
+            self.default_campaign_id = res[0].id
+        else:
+            self.default_campaign_id = False
+
+    def _get_is_campaign(self):
+        return self._get_default_campaign_id and True or False
 
 
     segment_segment_ids = fields.Many2many('analytic_segment.segment', 'segment_user_rel', string='Segments segments')
     segment_ids = fields.One2many('analytic_segment.user', 'user_id', string='Segments')
+    default_campaign_id = fields.Many2one('analytic_segment.segment', compute='_get_default_campaign_id')
+    campaign = fields.Boolean(compute='_get_is_campaign') # TODO: did we need this field???
 
 
 class res_company(models.Model):

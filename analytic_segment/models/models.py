@@ -51,34 +51,22 @@ class analytic_template(models.Model):
         if not self.type_id:
             self.segment = ''
         else:
-            error = False
-            fullcode = [self.code]
-            parent = self.parent_id
-            while parent:
-                fullcode.append(parent.code)
-                parent = parent.parent_id
-
-            # three segments...
-            try:
-                newfullcode = [PATTERN[0] % int(self.type_id.code)]
-                if self.type_id.code in ['1', '2']:
-                    newfullcode.append(PATTERN[1] % int(self.code))
-                    newfullcode.append(PATTERN[2] % 0)
-                else:
-                    parents = []
-                    obj = self.parent_id
-                    while obj:
-                        parents.insert(0, obj.code)
-                        obj = obj.parent_id
-                    newfullcode.append(PATTERN[1] % int(parents[self.type_id.level_parent]))
-                    newfullcode.append(PATTERN[2] % int(self.code))
-            except:
-                self.segment = ''
-                error = True
-            
-            if not error:
-                self.segment = '.'.join(newfullcode)
-        return
+            newfullcode = [PATTERN[0] % int(self.type_id.code)]
+            if self.type_id.code in ['1', '2']:
+                newfullcode.append(PATTERN[1] % int(self.code))
+                newfullcode.append(PATTERN[2] % 0)
+            elif self.type_id.code == '3':
+                newfullcode.append(PATTERN[1] % int(self.parent_id.code))
+                newfullcode.append(PATTERN[2] % int(self.code))
+            elif self.parent_id and self.parent_id.type_id.code == '4': # island
+                newfullcode.append(PATTERN[1] % int(self.parent_id.parent_id.parent_id.code))
+                newfullcode.append(PATTERN[2] % int(self.code))
+            else:
+                newfullcode.append(PATTERN[1] % int(self.parent_id.parent_id.code))
+                newfullcode.append(PATTERN[2] % int(self.code))
+                        
+        self.segment = '.'.join(newfullcode)
+        
 
     # TODO: clean up SQL part
     @api.model
@@ -172,30 +160,12 @@ class analytic_segment(models.Model):
     def _get_fullcode(self):
         """recursively get depth level in tree"""
         # segment is empty for virtual ones
-        if not self.type_id:
-            self.segment = ''
+        res = self.segment_tmpl_id.segment
+        # check for campaign
+        if not self.is_campaign:
+            self.segment = res
         else:
-            fullcode = [self.code]
-            parent = self.parent_id
-            while parent:
-                fullcode.append(parent.code)
-                parent = parent.parent_id
-
-            # three segments...
-            newfullcode = [PATTERN[0] % (int(self.type_id.code) + (self.is_campaign and 3 or 0))]
-            if self.type_id.code in ['1', '2']:
-                newfullcode.append(PATTERN[1] % int(self.code))
-                newfullcode.append(PATTERN[2] % 0)
-            else:
-                parents = []
-                obj = self.parent_id
-                while obj:
-                    parents.insert(0, obj.code)
-                    obj = obj.parent_id
-                newfullcode.append(PATTERN[1] % int(parents[self.type_id.level_parent]))
-                newfullcode.append(PATTERN[2] % int(self.code))
-
-            self.segment = '.'.join(newfullcode)
+            self.segment = res + '.C'
 
     @api.depends('campaign_id', 'segment_tmpl_id')
     @api.multi
@@ -215,6 +185,7 @@ class analytic_segment(models.Model):
     #user_id = fields.Many2one('analytic_segment.user') # to support calculate field
     # base
     #company_ids = fields.Many2many('res.company', 'segment_company_rel')
+    
 
 
 class analytic_segment_type(models.Model):
@@ -278,6 +249,7 @@ class analytic_segment_user(models.Model):
     segment_id = fields.Many2one('analytic_segment.segment') #, domain="[('id', 'in', 'company_segment_ids[0][2]')]") # with campaign
     segment = fields.Char(related='segment_id.segment', readonly=True) #TODO: store
     campaign_id = fields.Many2one(related='segment_id.campaign_id', readonly=True) #TODO: store
+    level = fields.Integer(related='segment_id.segment_tmpl_id.level', readonly=True) #TODO: store
     user_id = fields.Many2one('res.users')
     company_segment_ids = fields.One2many('analytic_segment.segment', compute='_company_segment_ids')
     campaign_default = fields.Boolean()

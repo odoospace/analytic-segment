@@ -213,10 +213,23 @@ class account_invoice(models.Model):
                     obj.segment_user_id = self.env.uid
             return
 
+    @api.multi
+    def _get_default_campaign(self):
+        if self.env.user.default_campaign_id:
+            #self.segment = self.env.user.default_campaign_id
+            return True
+
+    @api.onchange('is_campaign')
+    def _toggle_campaign_activate(self):
+        # TODO: add domain related code
+        print '_toggle_campaign_activate', self.is_campaign
+
     segment_id = fields.Many2one('analytic_segment.segment', domain=_domain_segment, required=True, default=_get_default_segment_from_user) #, required=True)
     segment = fields.Char(related='segment_id.segment', readonly=True)
     campaign_segment = fields.Boolean(related='segment_id.is_campaign', readonly=True)
     segment_user_id = fields.Many2one('res.users', compute='_segment_user_id', search=_search_segment_user)
+    # campaign filter
+    is_campaign = fields.Boolean(default=_get_default_campaign)
 
 
 class account_journal(models.Model):
@@ -316,7 +329,7 @@ class AccountVoucher(models.Model):
                 currency_rate_difference = sign * (line.move_line_id.amount_residual - amount)
             else:
                 currency_rate_difference = 0.0
-            #print line.move_line_id, line.move_line_id.territory_id.id, line.move_line_id.territory_level
+
             move_line = {
                 'journal_id': voucher.journal_id.id,
                 'period_id': voucher.period_id.id,
