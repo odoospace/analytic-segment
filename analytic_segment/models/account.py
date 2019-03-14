@@ -67,7 +67,7 @@ class account_move(models.Model):
                     obj.segment_user_id = self.env.uid
             return
 
-
+    # new fields
     segment_id = fields.Many2one('analytic_segment.segment', index=True, domain=_domain_segment, required=True, default=_get_default_segment_from_user) #)
     segment = fields.Char(related='segment_id.segment', readonly=True)
     campaign_segment = fields.Boolean(related='segment_id.is_campaign', readonly=True)
@@ -221,8 +221,17 @@ class account_invoice(models.Model):
 
     @api.onchange('is_campaign')
     def _toggle_campaign_activate(self):
-        # TODO: add domain related code
-        print '_toggle_campaign_activate', self.is_campaign
+        # select default campaign
+        if self.env.user.default_campaign_id:
+            self.segment_id = self.env.user.default_campaign_id
+
+        # active campaign filter
+        res = {
+            'domain': {
+                'segment_id': [('is_campaign', '=', self.is_campaign)]
+            }
+        }
+        return res
 
     segment_id = fields.Many2one('analytic_segment.segment', domain=_domain_segment, required=True, default=_get_default_segment_from_user) #, required=True)
     segment = fields.Char(related='segment_id.segment', readonly=True)

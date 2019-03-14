@@ -180,7 +180,7 @@ class analytic_segment(models.Model):
     segment_tmpl_id = fields.Many2one('analytic_segment.template', index=True, ondelete="cascade", required=True)
     segment = fields.Char(compute="_get_fullcode", readonly=True, store=True)
     campaign_id = fields.Many2one('analytic_segment.campaign')
-    is_campaign = fields.Boolean(compute='_is_campaign')
+    is_campaign = fields.Boolean(compute='_is_campaign', store=True)
     user_ids = fields.One2many('analytic_segment.user', 'segment_id')
     #user_id = fields.Many2one('analytic_segment.user') # to support calculate field
     # base

@@ -38,13 +38,15 @@ class res_users(models.Model):
         return
     
     # TODO: use store
+    @api.multi
     def _get_default_campaign_id(self):
         """return default campaign"""
-        res = [obj for obj in self.segment_ids if obj.campaign_default]
-        if res:
-            self.default_campaign_id = res[0].id
-        else:
-            self.default_campaign_id = False
+        for obj in self:
+            res = [item.segment_id for item in obj.segment_ids if item.campaign_default]
+            if res:
+                obj.default_campaign_id = res[0].id
+            else:
+                obj.default_campaign_id = False
 
     def _get_is_campaign(self):
         return self._get_default_campaign_id and True or False

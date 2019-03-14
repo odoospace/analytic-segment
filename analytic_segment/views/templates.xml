@@ -244,7 +244,6 @@
                     <field name="is_campaign"/>
                     <field name="segment_id"/>
                     <field name="segment"/>
-                    <field name="campaign_segment" readonly='1'/>
                 </field>
                 <field name="product_id" position="attributes">
                     <attribute name="domain">[('campaign', '=', parent.campaign_segment)]</attribute>
