@@ -17,7 +17,7 @@
     # Check https://github.com/odoo/odoo/blob/master/openerp/addons/base/module/module_data.xml
     # for the full list
     'category': 'Uncategorized',
-    'version': '8.0.14',
+    'version': '8.0.15',
     # any module necessary for this one to work correctly
     'depends': ['base', 'account', 'account_budget', 'analytic', 'podemos_base'],
 

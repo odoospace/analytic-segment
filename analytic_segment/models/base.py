@@ -61,6 +61,8 @@ class res_users(models.Model):
 class res_company(models.Model):
     _inherit = 'res.company'
 
+    segment_id = fields.Many2one('analytic_segment.segment') # main segment 
+    segment = fields.Char(related='segment_id.segment', readonly=True)
     segment_ids = fields.Many2many('analytic_segment.segment', 'segment_company_rel', string='Segments')
     #campaign_ids = fields.One2many('analytic_segment.campaign', 'company_id')
 
