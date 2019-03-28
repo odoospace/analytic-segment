@@ -214,3 +214,24 @@ class account_invoice_line(osv.osv):
                         asset_obj.validate(cr, uid, [asset_id], context=context)
         return True
 
+class AccountMoveLine(osv.osv):
+
+    _inherit = 'account.move.line'
+
+    #defalut behaviour don't change move_check field to false when a depreciation related move
+    #is deleted. in this method we override unlink method to force the value of the depreciation
+    #to False via sql
+    @api.multi
+    def unlink(self):
+        obj = {}
+        for i in self:
+            if i.asset_id:
+                for j in i.asset_id.depreciation_line_ids:
+                    if j.depreciation_date == i.date:
+                        sql = "UPDATE account_asset_depreciation_line set move_check=False where id=%d" % j.id
+                        self.env.cr.execute(sql)
+        res = super(AccountMoveLine, self).unlink()
+        return res
+
+
+
