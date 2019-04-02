@@ -39,6 +39,7 @@ class PaymentOrderCreate(models.TransientModel):
             #add payment mode segments
             order = self.env['payment.order'].search([('id', '=', self._context['active_id'])])
             seg = order.mode.segment_id
+            with_children = not order.mode.journal.check_segment_id
             #or add user segments
             # for i in self.env.user.segment_ids:
             #     if i.company_id == self.env.user.company_id:
@@ -51,7 +52,7 @@ class PaymentOrderCreate(models.TransientModel):
                 data = {
                     'report_id': self.id,
                     'segment_id': seg.id,
-                    'with_children': True
+                    'with_children': with_children
                 }
                 return [(0, 0, data)]
             else:
