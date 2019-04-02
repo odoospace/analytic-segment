@@ -11,6 +11,16 @@
             <field name="perm_unlink" eval="1"/>
             <field name="domain_force">['&amp;',('segment_user_id','=',user.id),('company_id','child_of',[user.company_id.id])]</field>
         </record>
+
+        <record id="see_only_visible_payment_order_sment" model="ir.rule">
+          <field name="name">See only territorial visible payment order segments</field>
+            <field name="model_id" ref="model_payment_order"/>
+            <field name="perm_read" eval="1"/>
+            <field name="perm_write" eval="1"/>
+            <field name="perm_create" eval="1"/>
+            <field name="perm_unlink" eval="1"/>
+            <field name="domain_force">['&amp;',('segment_user_id','=',user.id),('company_id','child_of',[user.company_id.id])]</field>
+        </record>
      
     </data>
 </openerp>
