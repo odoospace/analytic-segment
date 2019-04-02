@@ -11,6 +11,43 @@ import calendar
 from datetime import datetime
 from dateutil.relativedelta import relativedelta
 
+
+class PaymentOrder(models.Model):
+    _inherit = 'payment.order'
+
+    def _domain_segment(self):
+        # TODO: refactor these 3 functions!!!!
+        if self.env.user.id == 1:
+            # no restrictions
+            domain = []
+            return domain
+        else:
+            return [('id', 'in', [i.id for i in self.env.user.segment_segment_ids])]
+
+    def _search_segment_user(self, operator, value):
+        user = self.env['res.users'].browse(value)
+        return [('segment_id', 'in', [i.id for i in user.segment_segment_ids])]
+
+    @api.multi
+    def _segment_user_id(self):
+        # TODO: use a helper in analytic_segment if it's possible...
+        if self.env.user.id == 1:
+            for obj in self:
+                obj.segment_user_id = self.env.uid
+            return
+        else:
+            for obj in self:
+                if obj.segment_id in self.env.user.segment_segment_ids:
+                    obj.segment_user_id = self.env.uid
+            return
+
+    segment_id = fields.Many2one(related='mode.journal.segment_id', index=True, readonly=True, domain=_domain_segment)
+    segment = fields.Char(related='segment_id.segment', readonly=True)
+    # campaign_segment = fields.Boolean(related='move_id.campaign_segment', readonly=True)
+    segment_user_id = fields.Many2one('res.users', compute='_segment_user_id', search=_search_segment_user)
+
+
+
 class PaymentLine(models.Model):
     _inherit = 'payment.line'
 
