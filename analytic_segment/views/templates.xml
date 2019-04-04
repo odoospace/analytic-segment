@@ -284,7 +284,7 @@
                     <field name="journal_id"
                           invisible="context.get('line_type', False)"
                           widget="selection"
-                          domain="[('type','in',['bank', 'cash']),('type','in',('bank','cash')),('company_id', '=', context.get('company_id')),('segment_id', '=', context.get('segment_id'))]"
+                          domain="[('type','in',['bank', 'cash']),('type','in',('bank','cash')),('company_id', '=', context.get('company_id')),'|',('check_segment_id', '=', False),('segment_id', '=', context.get('segment_id'))]"
                           on_change="onchange_journal(journal_id, line_cr_ids, False, partner_id, date, amount, type, company_id, context)"
                           string="Payment Method"/>
                 </xpath>

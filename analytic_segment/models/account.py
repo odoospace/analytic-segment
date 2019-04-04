@@ -434,7 +434,7 @@ class AccountVoucher(models.Model):
         if 'invoice_id' in context.keys():
             invoice = self.env['account.invoice'].browse(context['invoice_id'])
 
-            if self.journal_id.segment_id.id != invoice.segment_id.id:
+            if self.journal_id.segment_id.id != invoice.segment_id.id and self.journal_id.check_segment_id:
                 raise osv.except_osv(_('Warning!'), _('To reconcile the entries territoriality/segments must be the same'))
 
             for line in invoice.payment_ids:
