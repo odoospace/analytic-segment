@@ -31,7 +31,12 @@ class AccountAnalyticLine(models.Model):
                 if obj.segment_id in self.env.user.segment_segment_ids:
                     obj.segment_user_id = self.env.uid
 
-    segment_id = fields.Many2one(related='move_id.move_id.segment_id', default=2, index=True, store=True, readonly=True, domain=_domain_segment)
+
+    @api.depends('move_id.move_id.segment_id')
+    def _update_segment_id(self):
+        self.segment_id = self.move_id.move_id.segment_id
+
+    segment_id = fields.Many2one(related='move_id.move_id.segment_id', index=True, store=True, readonly=True, domain=_domain_segment)
     segment = fields.Char(related='segment_id.segment', readonly=True)
     campaign_segment = fields.Boolean(related='move_id.move_id.campaign_segment', readonly=True)
     segment_user_id = fields.Many2one('res.users', compute='_segment_user_id', search=_search_segment_user)
@@ -73,7 +78,7 @@ class account_analytic_account(models.Model):
                 if obj.segment_id in self.env.user.segment_segment_ids:
                     obj.segment_user_id = self.env.uid
 
-            
+    
     segment_id = fields.Many2one('analytic_segment.segment', index=True) #, required=True)
     segment = fields.Char(related='segment_id.segment', readonly=True)
     segment_user_id = fields.Many2one('res.users', compute='_segment_user_id', search=_search_segment_user)
