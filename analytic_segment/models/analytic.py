@@ -36,7 +36,11 @@ class AccountAnalyticLine(models.Model):
     def _update_segment_id(self):
         self.segment_id = self.move_id.move_id.segment_id
 
+<<<<<<< HEAD
     segment_id = fields.Many2one(related='move_id.move_id.segment_id', index=True, store=True, readonly=True, domain=_domain_segment, default=2)
+=======
+    segment_id = fields.Many2one(related='move_id.move_id.segment_id', index=True, store=True, readonly=True, domain=_domain_segment)
+>>>>>>> 839279d... - add depends for segment_id store
     segment = fields.Char(related='segment_id.segment', readonly=True)
     campaign_segment = fields.Boolean(related='move_id.move_id.campaign_segment', readonly=True)
     segment_user_id = fields.Many2one('res.users', compute='_segment_user_id', search=_search_segment_user)
