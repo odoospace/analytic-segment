@@ -133,7 +133,7 @@ class account_move_line(models.Model):
 
         for line in self.browse(cr, uid, ids, context=context):
             acc_exception = False
-            if line.account_id.code[0:3] == '759' or uid == 1:
+            if line.account_id.code[0:3] == '759' or uid == 1 or not line.journal_id.check_segment_id:
                 acc_exception = True
 
             if not segment_id and line.segment_id:
@@ -215,7 +215,7 @@ class account_move_line(models.Model):
         for line in lines:
             acc_exception = False
             account = account_obj.browse(cr, uid, line['account_id']['id'], context=context)
-            if account.code[0:3] == '759' or uid == 1:
+            if account.code[0:3] == '759' or uid == 1  or not line.journal_id.check_segment_id:
                 acc_exception = True
 
             if not segment_id and line['segment_id']:
