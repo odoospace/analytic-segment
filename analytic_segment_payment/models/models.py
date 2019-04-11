@@ -45,7 +45,7 @@ class PaymentOrder(models.Model):
     def _update_segment_id(self):
         self.segment_id = self.mode.journal.segment_id
 
-    segment_id = fields.Many2one(related='mode.journal.segment_id', index=True, readonly=True, store=True, domain=_domain_segment)
+    segment_id = fields.Many2one(related='mode.journal.segment_id', index=True, readonly=True, store=True, domain=_domain_segment, default=2)
     segment = fields.Char(related='segment_id.segment', readonly=True)
     # campaign_segment = fields.Boolean(related='move_id.campaign_segment', readonly=True)
     segment_user_id = fields.Many2one('res.users', compute='_segment_user_id', search=_search_segment_user)
@@ -69,7 +69,7 @@ class PaymentLine(models.Model):
     def _update_segment_id(self):
         self.segment_id = self.move_line_id.move_id.segment_id
 
-    segment_id = fields.Many2one(related='move_line_id.move_id.segment_id', index=True, store=True, readonly=True, domain=_domain_segment)
+    segment_id = fields.Many2one(related='move_line_id.move_id.segment_id', index=True, store=True, readonly=True, domain=_domain_segment, default=2)
     segment = fields.Char(related='segment_id.segment', readonly=True)
 
 
@@ -107,7 +107,7 @@ class PaymenMode(models.Model):
     def _update_segment_id(self):
         self.segment_id = self.journal.segment_id
 
-    segment_id = fields.Many2one(related='journal.segment_id', index=True, store=True, readonly=True, domain=_domain_segment)
+    segment_id = fields.Many2one(related='journal.segment_id', index=True, store=True, readonly=True, domain=_domain_segment, default=2)
     segment = fields.Char(related='segment_id.segment', readonly=True)
     # campaign_segment = fields.Boolean(related='move_id.campaign_segment', readonly=True)
     segment_user_id = fields.Many2one('res.users', compute='_segment_user_id', search=_search_segment_user)
