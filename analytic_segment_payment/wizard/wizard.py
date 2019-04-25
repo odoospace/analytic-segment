@@ -72,5 +72,5 @@ class PaymentOrderCreate(models.TransientModel):
                 if s.with_children:
                     segment_tmpl_ids += s.segment_id.segment_tmpl_id.get_childs_ids()
             segment_ids = self.env['analytic_segment.segment'].search([('segment_tmpl_id', 'in', segment_tmpl_ids)])
-            domain += [('segment_id', 'in', [i.id for i in segment_ids])]
+            domain.insert(0, ('segment_id', 'in', [i.id for i in segment_ids]))
         return domain
