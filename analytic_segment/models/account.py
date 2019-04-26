@@ -550,6 +550,7 @@ class AccountVoucher(models.Model):
         :return: Tuple build as (remaining amount not allocated on voucher lines, list of account_move_line created in this method)
         :rtype: tuple(float, list of int)
         '''
+        # print 'entro voucher_move_line_create', context
         if context is None:
             context = {}
         move_line_obj = self.pool.get('account.move.line')
@@ -599,7 +600,8 @@ class AccountVoucher(models.Model):
                 'credit': 0.0,
                 'debit': 0.0,
                 'date': voucher.date,
-                'segment_id': line.move_line_id.segment_id.id or 1,
+                'segment_id': ctx['segment_id'],
+                # 'segment_id': line.move_line_id.segment_id.id or 1,
             }
             if amount < 0:
                 amount = -amount
@@ -675,24 +677,32 @@ class AccountVoucher(models.Model):
 
     @api.multi
     def button_proforma_voucher(self):
-        cr, uid, context = self.env.args
-        self.signal_workflow('proforma_voucher')
+        # print 'entro button_proforma_voucher', self, self.reference, self.number, self.move_ids
+
+        cr, uid, context = self.env.args    
+        # print context['segment_id']    
 
         if 'invoice_id' in context.keys():
             invoice = self.env['account.invoice'].browse(context['invoice_id'])
 
             if self.journal_id.segment_id.id != invoice.segment_id.id and self.journal_id.check_segment_id:
                 raise osv.except_osv(_('Warning!'), _('To reconcile the entries territoriality/segments must be the same'))
+            nu_context = context.copy()
+            nu_context['segment_id'] = invoice.segment_id.id
+            context = nu_context
+            # print context['segment_id']
+            self.proforma_voucher(context=context)
+            # self.signal_workflow('proforma_voucher', context=context)
 
-            for line in invoice.payment_ids:
-                move = line.move_id
-                # print move
-                # if not move.main_territory == invoice.main_territory:
-                vals = {}
-                vals['segment_id'] = invoice.segment_id.id
+            # for line in invoice.payment_ids:
+            #     move = line.move_id
+            #     # print move
+            #     # if not move.main_territory == invoice.main_territory:
+            #     vals = {}
+            #     vals['segment_id'] = invoice.segment_id.id
 
-                # print 'vals 2', vals
-                move.write(vals)
+            #     # print 'vals 2', vals
+            #     move.write(vals)
         return {'type': 'ir.actions.act_window_close'}
 
 # class account_voucher(osv.osv):
@@ -707,6 +717,7 @@ class AccountVoucher(models.Model):
         :return: mapping between fieldname and value of account move to create
         :rtype: dict
         '''
+        # print 'entro account_move_get', self, context
         seq_obj = self.pool.get('ir.sequence')
         voucher = self.pool.get('account.voucher').browse(cr,uid,voucher_id,context)
         if voucher.number:
@@ -733,7 +744,8 @@ class AccountVoucher(models.Model):
             'date': voucher.date,
             'ref': ref,
             'period_id': voucher.period_id.id,
-            'segment_id': voucher.journal_id.segment_id.id,
+            'segment_id': context['segment_id'],
+            # 'segment_id': voucher.journal_id.segment_id.id,
         }
         return move
 
