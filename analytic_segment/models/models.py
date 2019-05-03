@@ -65,7 +65,7 @@ class analytic_template(models.Model):
                 newfullcode.append(PATTERN[1] % int(self.parent_id.parent_id.code))
                 newfullcode.append(PATTERN[2] % int(self.code))
                         
-        self.segment = '.'.join(newfullcode)
+            self.segment = '.'.join(newfullcode)
         
 
     # TODO: clean up SQL part
