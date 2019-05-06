@@ -5,8 +5,9 @@ from openerp import models, fields, api, _
 from openerp.exceptions import ValidationError, Warning
 from openerp.tools import float_compare
 from openerp.osv import osv
-import time
 from openerp import workflow
+import json
+import time
 
 
 class account_move(models.Model):
@@ -44,9 +45,15 @@ class account_move(models.Model):
     def _domain_segment(self):
         if self.env.user.id == 1:
             domain = []
-            return domain
         else:
-            return [('id', 'in', [i.id for i in self.env.user.segment_segment_ids])]
+            if self.env.user.segment_by_company:
+                segment_by_company = json.loads(self.env.user.segment_by_company)
+                print '_domain_segment', self.env.user.company_id.id, segment_by_company
+                domain = [('id', 'in', segment_by_company[str(self.env.user.company_id.id)])]
+            else:
+                domain = [('id', '=', 0)]
+        print '>>> domains:', domain
+        return domain
 
     def _get_default_segment_from_user(self):
         for i in self.env.user.segment_ids:
@@ -65,6 +72,7 @@ class account_move(models.Model):
                 obj.segment_user_id = self.env.uid
             return
         else:
+
             for obj in self:
                 if obj.segment_id in self.env.user.segment_segment_ids:
                     obj.segment_user_id = self.env.uid

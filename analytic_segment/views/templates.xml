@@ -161,6 +161,7 @@
                       <field name="company_segment_ids" invisible="1"/>
                       <field name="campaign_id"/>
                       <field name="campaign_default"/>
+                      <field name="with_childs"/>
                     </tree>
                   </field>
                 </page>
