@@ -30,7 +30,7 @@ class res_users(models.Model):
                     segment_company_all_ids[s.company_id.id] += s.segment_id.get_childs_ids()
                     
                 if not s.campaign_id or (s.campaign_id and s.campaign_id.state == 'open'):
-                    if not s.company_id in segment_company_open_ids:
+                    if not s.company_id.id in segment_company_open_ids:
                         segment_company_open_ids[s.company_id.id] = []
                     segment_company_open_ids[s.company_id.id] += [s.segment_id.id]
                     if s.with_childs:
