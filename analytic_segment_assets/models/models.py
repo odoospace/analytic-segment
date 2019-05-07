@@ -10,6 +10,8 @@ import time
 import calendar
 from datetime import datetime
 from dateutil.relativedelta import relativedelta
+import json
+
 
 
 class AccountInvoice(models.Model):
@@ -42,18 +44,29 @@ class AccountAssetAsset(models.Model):
     def _domain_segment(self):
         if self.env.user.id == 1:
             domain = []
-            return domain
         else:
-            return [('id', 'in', [i.id for i in self.env.user.segment_segment_ids])]
+            print '+++', self.env.user.segment_by_company_open
+            segment_by_company_open = json.loads(self.env.user.segment_by_company_open)[str(self.env.user.company_id.id)]
+            print '_domain_segment', self.env.user.company_id.id, segment_by_company_open
+            domain = [('id', 'in', segment_by_company_open)]
+        print '>>> domains:', domain
+        return domain
 
     def _get_default_segment_from_user(self):
+        # TODO: search real default
         for i in self.env.user.segment_ids:
             if i.company_id == self.env.user.company_id:
                 return i.segment_id
 
     def _search_segment_user(self, operator, value):
-        user = self.env['res.users'].browse(value)
-        return [('segment_id', 'in', [i.id for i in user.segment_segment_ids])]
+        #user = self.env['res.users'].browse(value)
+        user = self.env['res.users'].browse(self.env.context['user'])
+        print 'account_asset', user.id, user.company_id.id, user.company_id.name
+        print '+++', user.segment_by_company
+        segment_by_company = json.loads(user.segment_by_company)[str(user.company_id.id)]
+        res = [('segment_id', 'in', segment_by_company)]
+        print '>>>', res
+        return res
 
     @api.multi
     def _segment_user_id(self):
@@ -64,9 +77,11 @@ class AccountAssetAsset(models.Model):
             return
         else:
             for obj in self:
-                if obj.segment_id in self.env.user.segment_segment_ids:
+                segment_by_company = json.loads(self.env.user.segment_by_company)[str(self.env.user.company_id.id)]
+                if obj.segment_id in segment_by_company:
                     obj.segment_user_id = self.env.uid
             return
+
 
     segment_id = fields.Many2one('analytic_segment.segment', index=True, domain=_domain_segment, required=True, default=_get_default_segment_from_user) #)
     segment = fields.Char(related='segment_id.segment', readonly=True)

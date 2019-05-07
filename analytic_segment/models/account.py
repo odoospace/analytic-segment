@@ -77,7 +77,6 @@ class account_move(models.Model):
                 obj.segment_user_id = self.env.uid
             return
         else:
-
             for obj in self:
                 segment_by_company = json.loads(self.env.user.segment_by_company)[str(self.env.user.company_id.id)]
                 if obj.segment_id in segment_by_company:
@@ -95,17 +94,31 @@ class account_move_line(models.Model):
     _inherit = 'account.move.line'
 
     def _domain_segment(self):
-        # TODO: refactor these 3 functions!!!!
         if self.env.user.id == 1:
-            # no restrictions
             domain = []
-            return domain
         else:
-            return [('id', 'in', [i.id for i in self.env.user.segment_segment_ids])]
+            print '+++', self.env.user.segment_by_company_open
+            segment_by_company_open = json.loads(self.env.user.segment_by_company_open)[str(self.env.user.company_id.id)]
+            print '_domain_segment', self.env.user.company_id.id, segment_by_company_open
+            domain = [('id', 'in', segment_by_company_open)]
+        print '>>> domains:', domain
+        return domain
+
+    def _get_default_segment_from_user(self):
+        # TODO: search real default
+        for i in self.env.user.segment_ids:
+            if i.company_id == self.env.user.company_id:
+                return i.segment_id
 
     def _search_segment_user(self, operator, value):
-        user = self.env['res.users'].browse(value)
-        return [('segment_id', 'in', [i.id for i in user.segment_segment_ids])]
+        #user = self.env['res.users'].browse(value)
+        user = self.env['res.users'].browse(self.env.context['user'])
+        print 'account_move_line', user.id, user.company_id.id, user.company_id.name
+        print '+++', user.segment_by_company
+        segment_by_company = json.loads(user.segment_by_company)[str(user.company_id.id)]
+        res = [('segment_id', 'in', segment_by_company)]
+        print '>>>', res
+        return res
 
     @api.multi
     def _segment_user_id(self):
@@ -116,9 +129,11 @@ class account_move_line(models.Model):
             return
         else:
             for obj in self:
-                if obj.segment_id in self.env.user.segment_segment_ids:
+                segment_by_company = json.loads(self.env.user.segment_by_company)[str(self.env.user.company_id.id)]
+                if obj.segment_id in segment_by_company:
                     obj.segment_user_id = self.env.uid
             return
+
 
     @api.depends('move_id.segment_id')
     def _update_segment_id(self):
@@ -444,25 +459,31 @@ class account_invoice(models.Model):
         return
 
     def _domain_segment(self):
-        # TODO: refactor these 3 functions!!!!
         if self.env.user.id == 1:
-            # no restrictions
-            domain = [] 
+            domain = []
         else:
+            print '+++', self.env.user.segment_by_company_open
             segment_by_company_open = json.loads(self.env.user.segment_by_company_open)[str(self.env.user.company_id.id)]
+            print '_domain_segment', self.env.user.company_id.id, segment_by_company_open
             domain = [('id', 'in', segment_by_company_open)]
+        print '>>> domains:', domain
         return domain
 
     def _get_default_segment_from_user(self):
-        # TODO: improve this! search default
+        # TODO: search real default
         for i in self.env.user.segment_ids:
             if i.company_id == self.env.user.company_id:
                 return i.segment_id
 
     def _search_segment_user(self, operator, value):
         #user = self.env['res.users'].browse(value)
-        segment_by_company = json.loads(self.env.user.segment_by_company)[str(self.env.user.company_id.id)]
-        return [('segment_id', 'in', segment_by_company)]
+        user = self.env['res.users'].browse(self.env.context['user'])
+        print 'account_invoice', user.id, user.company_id.id, user.company_id.name
+        print '+++', user.segment_by_company
+        segment_by_company = json.loads(user.segment_by_company)[str(user.company_id.id)]
+        res = [('segment_id', 'in', segment_by_company)]
+        print '>>>', res
+        return res
 
     @api.multi
     def _segment_user_id(self):
@@ -470,11 +491,13 @@ class account_invoice(models.Model):
         if self.env.user.id == 1:
             for obj in self:
                 obj.segment_user_id = self.env.uid
+            return
         else:
-            segment_by_company = json.loads(self.env.user.segment_by_company)[str(self.env.user.company_id)]
             for obj in self:
+                segment_by_company = json.loads(self.env.user.segment_by_company)[str(self.env.user.company_id.id)]
                 if obj.segment_id in segment_by_company:
                     obj.segment_user_id = self.env.uid
+            return
 
 
     @api.multi
@@ -517,17 +540,31 @@ class account_journal(models.Model):
         return
 
     def _domain_segment(self):
-        # TODO: refactor these 3 functions!!!!
         if self.env.user.id == 1:
-            # no restrictions
             domain = []
-            return domain
         else:
-            return [('id', 'in', [i.id for i in self.env.user.segment_segment_ids])]
+            print '+++', self.env.user.segment_by_company_open
+            segment_by_company_open = json.loads(self.env.user.segment_by_company_open)[str(self.env.user.company_id.id)]
+            print '_domain_segment', self.env.user.company_id.id, segment_by_company_open
+            domain = [('id', 'in', segment_by_company_open)]
+        print '>>> domains:', domain
+        return domain
+
+    def _get_default_segment_from_user(self):
+        # TODO: search real default
+        for i in self.env.user.segment_ids:
+            if i.company_id == self.env.user.company_id:
+                return i.segment_id
 
     def _search_segment_user(self, operator, value):
-        user = self.env['res.users'].browse(value)
-        return [('segment_id', 'in', [i.id for i in user.segment_segment_ids])]
+        #user = self.env['res.users'].browse(value)
+        user = self.env['res.users'].browse(self.env.context['user'])
+        print 'account_journal', user.id, user.company_id.id, user.company_id.name
+        print '+++', user.segment_by_company
+        segment_by_company = json.loads(user.segment_by_company)[str(user.company_id.id)]
+        res = [('segment_id', 'in', segment_by_company)]
+        print '>>>', res
+        return res
 
     @api.multi
     def _segment_user_id(self):
@@ -538,9 +575,11 @@ class account_journal(models.Model):
             return
         else:
             for obj in self:
-                if obj.segment_id in self.env.user.segment_segment_ids:
+                segment_by_company = json.loads(self.env.user.segment_by_company)[str(self.env.user.company_id.id)]
+                if obj.segment_id in segment_by_company:
                     obj.segment_user_id = self.env.uid
             return
+
 
     segment_id = fields.Many2one('analytic_segment.segment', index=True, domain=_domain_segment) #, required=True)
     segment = fields.Char(related='segment_id.segment', readonly=True)
