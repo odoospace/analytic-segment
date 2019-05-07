@@ -284,16 +284,6 @@ class analytic_segment_user(models.Model):
     with_childs = fields.Boolean()
 
 
-"""
-class analytic_segment_user_cache(models.Model):
-    _name = 'analytic_segment.user.cache'
-    _description = 'Collection of segments by user'
-
-    user_id = fields.One2many('res.users', 'cache_ids')
-    company_id = fields.Many2one('res.company')
-    segment_ids = fields.Many2many('analytic_segment.segment', 'segment_user_cache_rel', string='Segments segments')
-"""
-
 class analytic_segment_campaign(models.Model):
     _name = 'analytic_segment.campaign'
     _description = 'Data for campaigns'

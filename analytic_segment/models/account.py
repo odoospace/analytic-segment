@@ -62,11 +62,8 @@ class account_move(models.Model):
     def _search_segment_user(self, operator, value):
         #user = self.env['res.users'].browse(value)
         user = self.env['res.users'].browse(self.env.context['user'])
-        print 'account_move', user.id, user.company_id.id, user.company_id.name
-        print '+++', user.segment_by_company
         segment_by_company = json.loads(user.segment_by_company)[str(user.company_id.id)]
         res = [('segment_id', 'in', segment_by_company)]
-        print '>>>', res
         return res
 
     @api.multi
