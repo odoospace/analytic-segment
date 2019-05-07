@@ -23,7 +23,7 @@ class res_users(models.Model):
             segment_company_open_ids = {}
             print 'segments:', [i.segment_id.id for i in user.segment_ids]
             for s in user.segment_ids:
-                if not s.comspany_id.id in segment_company_all_ids:
+                if not s.company_id.id in segment_company_all_ids:
                     segment_company_all_ids[s.company_id.id] = []
                 segment_company_all_ids[s.company_id.id] += [s.segment_id.id]
                 if s.with_childs:

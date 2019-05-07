@@ -449,7 +449,7 @@ class account_invoice(models.Model):
             # no restrictions
             domain = [] 
         else:
-            segment_by_company_open = json.loads(self.env.user.segment_by_company_open)[str(self.env.user.company_id)]
+            segment_by_company_open = json.loads(self.env.user.segment_by_company_open)[str(self.env.user.company_id.id)]
             domain = [('id', 'in', segment_by_company_open)]
         return domain
 
@@ -461,7 +461,7 @@ class account_invoice(models.Model):
 
     def _search_segment_user(self, operator, value):
         #user = self.env['res.users'].browse(value)
-        segment_by_company = json.loads(self.env.user.segment_by_company)[str(self.env.user.company_id)]
+        segment_by_company = json.loads(self.env.user.segment_by_company)[str(self.env.user.company_id.id)]
         return [('segment_id', 'in', segment_by_company)]
 
     @api.multi
