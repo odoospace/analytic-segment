@@ -68,6 +68,7 @@ class account_analytic_account(models.Model):
 
     @api.multi
     def _segment_user_id(self):
+        #print '>>> account.analytic.account'
         # TODO: use a helper in analytic_segment if it's possible...
         if self.env.user.id == 1:
             for obj in self:
