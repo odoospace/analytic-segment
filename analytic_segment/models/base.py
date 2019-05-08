@@ -42,9 +42,13 @@ class res_users(models.Model):
                         segment_company_open_ids[s.company_id.id] = []
                     segment_company_open_ids[s.company_id.id] += [s.segment_id.id]
                     # add all segment of 
-                    if s.with_childs:
+                    if s.campaign_id and s.with_childs:
                         segment_company_open_ids[s.company_id.id] += [i.id for i in s.segment_id.campaign_id.segment_ids]
-            
+                    elif s.with_childs:
+                        segments_tmpl_ids = s.segment_id.segment_tmpl_id.get_childs_ids()
+                        segments_ids = self.env['analytic_segment.segment'].search([('segment_tmpl_id', 'in', segments_tmpl_ids), ('campaign_id', '=', False)])
+                        segment_company_open_ids[s.company_id.id] += [i.id for i in segments_ids]
+        
             # add virtual companies segments
             virtual_segments = self.env['analytic_segment.segment'].search([('virtual', '=', True)])
             for company in segment_company_all_ids.keys():
