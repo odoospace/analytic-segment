@@ -21,11 +21,11 @@ class PaymentOrder(models.Model):
         if self.env.user.id == 1:
             domain = []
         else:
-            print '+++', self.env.user.segment_by_company_open
+            # print '+++', self.env.user.segment_by_company_open
             segment_by_company_open = json.loads(self.env.user.segment_by_company_open)[str(self.env.user.company_id.id)]
-            print '_domain_segment', self.env.user.company_id.id, segment_by_company_open
+            # print '_domain_segment', self.env.user.company_id.id, segment_by_company_open
             domain = [('id', 'in', segment_by_company_open)]
-        print '>>> domains:', domain
+        # print '>>> domains:', domain
         return domain
 
     def _get_default_segment_from_user(self):
@@ -37,11 +37,11 @@ class PaymentOrder(models.Model):
     def _search_segment_user(self, operator, value):
         #user = self.env['res.users'].browse(value)
         user = self.env['res.users'].browse(self.env.context['user'])
-        print 'payment_order', user.id, user.company_id.id, user.company_id.name
-        print '+++', user.segment_by_company
+        # print 'payment_order', user.id, user.company_id.id, user.company_id.name
+        # print '+++', user.segment_by_company
         segment_by_company = json.loads(user.segment_by_company)[str(user.company_id.id)]
         res = [('segment_id', 'in', segment_by_company)]
-        print '>>>', res
+        # print '>>>', res
         return res
 
     @api.multi
@@ -93,11 +93,11 @@ class PaymentLine(models.Model):
     def _search_segment_user(self, operator, value):
         #user = self.env['res.users'].browse(value)
         user = self.env['res.users'].browse(self.env.context['user'])
-        print 'payment_line', user.id, user.company_id.id, user.company_id.name
-        print '+++', user.segment_by_company
+        # print 'payment_line', user.id, user.company_id.id, user.company_id.name
+        # print '+++', user.segment_by_company
         segment_by_company = json.loads(user.segment_by_company)[str(user.company_id.id)]
         res = [('segment_id', 'in', segment_by_company)]
-        print '>>>', res
+        # print '>>>', res
         return res
 
     @api.multi
@@ -132,11 +132,11 @@ class PaymenMode(models.Model):
         if self.env.user.id == 1:
             domain = []
         else:
-            print '+++', self.env.user.segment_by_company_open
+            # print '+++', self.env.user.segment_by_company_open
             segment_by_company_open = json.loads(self.env.user.segment_by_company_open)[str(self.env.user.company_id.id)]
-            print '_domain_segment', self.env.user.company_id.id, segment_by_company_open
+            # print '_domain_segment', self.env.user.company_id.id, segment_by_company_open
             domain = [('id', 'in', segment_by_company_open)]
-        print '>>> domains:', domain
+        # print '>>> domains:', domain
         return domain
 
     def _get_default_segment_from_user(self):
@@ -148,11 +148,11 @@ class PaymenMode(models.Model):
     def _search_segment_user(self, operator, value):
         #user = self.env['res.users'].browse(value)
         user = self.env['res.users'].browse(self.env.context['user'])
-        print 'payment_mode', user.id, user.company_id.id, user.company_id.name
-        print '+++', user.segment_by_company
+        # print 'payment_mode', user.id, user.company_id.id, user.company_id.name
+        # print '+++', user.segment_by_company
         segment_by_company = json.loads(user.segment_by_company)[str(user.company_id.id)]
         res = [('segment_id', 'in', segment_by_company)]
-        print '>>>', res
+        # print '>>>', res
         return res
 
     @api.multi
