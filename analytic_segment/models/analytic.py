@@ -2,6 +2,8 @@
 # use analytic_segment with analytic accounts
 
 from openerp import models, fields, api
+import json
+
 
 class AccountAnalyticLine(models.Model):
     _inherit = 'account.analytic.line'
