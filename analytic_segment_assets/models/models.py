@@ -45,11 +45,8 @@ class AccountAssetAsset(models.Model):
         if self.env.user.id == 1:
             domain = []
         else:
-            print '+++', self.env.user.segment_by_company_open
             segment_by_company_open = json.loads(self.env.user.segment_by_company_open)[str(self.env.user.company_id.id)]
-            print '_domain_segment', self.env.user.company_id.id, segment_by_company_open
             domain = [('id', 'in', segment_by_company_open)]
-        print '>>> domains:', domain
         return domain
 
     def _get_default_segment_from_user(self):
