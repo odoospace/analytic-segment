@@ -335,7 +335,8 @@ class account_move_line(models.Model):
                     'date': date,
                     'partner_id': partner_id,
                     'currency_id': cur_id or (account.currency_id.id or False),
-                    'amount_currency': amount_currency_writeoff and -1 * amount_currency_writeoff or (account.currency_id.id and -1 * currency or 0.0)
+                    'amount_currency': amount_currency_writeoff and -1 * amount_currency_writeoff or (account.currency_id.id and -1 * currency or 0.0),
+                    'segment_id': segment_id,
                 }),
                 (0, 0, {
                     'name': libelle,
@@ -346,7 +347,8 @@ class account_move_line(models.Model):
                     'date': date,
                     'partner_id': partner_id,
                     'currency_id': cur_id or (account.currency_id.id or False),
-                    'amount_currency': amount_currency_writeoff and amount_currency_writeoff or (account.currency_id.id and currency or 0.0)
+                    'amount_currency': amount_currency_writeoff and amount_currency_writeoff or (account.currency_id.id and currency or 0.0),
+                    'segment_id': segment_id,
                 })
             ]
 
@@ -355,7 +357,8 @@ class account_move_line(models.Model):
                 'journal_id': writeoff_journal_id,
                 'date':date,
                 'state': 'draft',
-                'line_id': writeoff_lines
+                'line_id': writeoff_lines,
+                'segment_id': segment_id,
             })
 
             writeoff_line_ids = self.search(cr, uid, [('move_id', '=', writeoff_move_id), ('account_id', '=', account_id)])
