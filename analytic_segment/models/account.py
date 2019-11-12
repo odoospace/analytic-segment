@@ -624,7 +624,7 @@ class AccountVoucher(models.Model):
             move_line = {
                 'journal_id': voucher.journal_id.id,
                 'period_id': voucher.period_id.id,
-                'name': line.name or '/',
+                'name': line.name or ('Pago %s' % line.move_line_id.move_id.name) or '/',
                 'account_id': line.account_id.id,
                 'move_id': move_id,
                 'partner_id': voucher.partner_id.id,
