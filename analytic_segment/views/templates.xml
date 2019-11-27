@@ -257,6 +257,30 @@
             </field>
         </record>
         <!-- END INHERIT account.invoice_supplier_form -->
+        <!-- BEGIN INHERIT account.invoice_supplier_form  -->
+        <record id="invoice_customer_form_as" model="ir.ui.view">
+            <field name="name">account.invoice.customer.form.as</field>
+            <field name="model">account.invoice</field>
+            <field name="inherit_id" ref="account.invoice_form"/>
+            <field name="arch" type="xml">
+                <field name="journal_id" position="after">
+                    <field name="segment_id"/>
+                    <field name="segment"/>
+                    <field name="campaign_segment" readonly='1'/>
+                </field>
+                <!-- <field name="product_id" position="attributes">
+                    <attribute name="domain">[('campaign', '=', parent.campaign_segment)]</attribute>
+                </field>
+                <xpath expr="//notebook/page[1]/field[1]/tree[@string='Invoice lines']//field[5]" position="attributes">
+                    <attribute name="domain">[('blocked', '=', False),('company_id', '=', parent.company_id), ('journal_id', '=', parent.journal_id), ('type', '=', 'other'), ('campaign', '=', parent.campaign_segment)]</attribute>
+                </xpath>
+                <xpath expr="//page//tree//field[@name='invoice_line_tax_id']" position="attributes">
+                    <attribute name="domain">[('parent_id','=',False),('company_id', '=', parent.company_id),('campaign','=', parent.campaign_segment)]
+                    </attribute>
+                </xpath> -->
+            </field>
+        </record>
+        <!-- END INHERIT account.invoice_supplier_form -->
         <!-- BEGIN INHERIT account.invoice_tree -->
         <record id="view_account_invoice_tree_as" model="ir.ui.view">
             <field name="name">account.invoice.tree.as</field>
