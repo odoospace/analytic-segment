@@ -230,7 +230,7 @@
             parent="menu_analytic_segment"
             sequence="40" action="action_analytic_segment_type"/>
         <menuitem id="menu_analytic_segment_campaign" name="Campaigns"
-            parent="menu_analytic_segments"
+            parent="menu_analytic_segment"
             sequence="50" action="action_analytic_segment_campaign"/>
         <!-- END: action & menu -->
 
