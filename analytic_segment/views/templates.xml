@@ -221,13 +221,16 @@
             <field name="view_mode">tree,form</field>
         </record>
         <menuitem id="menu_analytic_segment" name="Analytic segments"
-            parent="universal_account.menu_finance_territorial_segments"
+            parent="account.menu_finance"
+            sequence="13"/>
+        <menuitem id="menu_analytic_segment_segment" name="Analytic segments"
+            parent="menu_analytic_segment"
             sequence="30" action="action_analytic_segment"/>
         <menuitem id="menu_analytic_segment_type" name="Type of segments"
-            parent="universal_account.menu_finance_territorial_segments"
+            parent="menu_analytic_segment"
             sequence="40" action="action_analytic_segment_type"/>
         <menuitem id="menu_analytic_segment_campaign" name="Campaigns"
-            parent="universal_account.menu_finance_territorial_segments"
+            parent="menu_analytic_segments"
             sequence="50" action="action_analytic_segment_campaign"/>
         <!-- END: action & menu -->
 
