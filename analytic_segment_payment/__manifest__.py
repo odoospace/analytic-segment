@@ -19,7 +19,7 @@
     'category': 'Uncategorized',
     'version': '8.0.0.1',
     # any module necessary for this one to work correctly
-    'depends': ['base', 'account']#, 'analytic_segment', 'account_banking_payment_export', 'account_payment'],
+    'depends': ['base', 'account'],#, 'analytic_segment', 'account_banking_payment_export', 'account_payment'],
 
     # always loaded
     'data': [
