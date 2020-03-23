@@ -1,9 +1,9 @@
 # -*- coding: utf-8 -*-
 # More simple segment model to use in odoo analytic and no analytic objects
 
-from openerp import models, fields, api
-from openerp.tools.translate import _
-from openerp.exceptions import ValidationError
+from odoo import models, fields, api
+from odoo.tools.translate import _
+from odoo.exceptions import ValidationError
 from random import random
 
 PATTERN = ['%i', '%02i', '%06i']

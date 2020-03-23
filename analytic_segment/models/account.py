@@ -2,10 +2,10 @@
 # use analytic_segment with analytic accounts
 
 from openerp import models, fields, api, _
-from openerp.exceptions import ValidationError, Warning
-from openerp.tools import float_compare
-from openerp.osv import osv
-from openerp import workflow
+from odoo.exceptions import ValidationError, Warning
+from odoo.tools import float_compare
+from odoo.osv import osv
+from odoo import workflow
 import json
 import time
 
@@ -168,7 +168,7 @@ class account_move_line(models.Model):
                 campaign = line.campaign
 
             if not acc_exception:
-                print 'check concil', segment_id, line.segment_id
+                print('check concil', segment_id, line.segment_id)
                 if segment_id != line.segment_id.id:
                     raise osv.except_osv(_('Warning!'), _('aml: To reconcile the entries segment_id must be the same'))
                 if campaign != line.campaign:
@@ -218,7 +218,7 @@ class account_move_line(models.Model):
         return r_id
 
     def reconcile(self, cr, uid, ids, type='auto', writeoff_acc_id=False, writeoff_period_id=False, writeoff_journal_id=False, context=None):
-        print '^*/&%$ entro custom reconcile'
+        print('^*/&%$ entro custom reconcile')
         account_obj = self.pool.get('account.account')
         move_obj = self.pool.get('account.move')
         move_rec_obj = self.pool.get('account.move.reconcile')
@@ -250,7 +250,7 @@ class account_move_line(models.Model):
                 campaign = line['campaign']
 
             if not acc_exception:
-                print 'check concil', segment_id, line['segment_id']
+                print('check concil', segment_id, line['segment_id'])
                 if segment_id != line['segment_id']['id']:
                     raise osv.except_osv(_('Warning!'), _('aml: To reconcile the entries segment_id must be the same'))
                 if campaign != line['campaign']:

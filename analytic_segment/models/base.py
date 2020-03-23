@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 # use res_users and res_company with analytic accounts
 
-from openerp import models, fields, api, _
+from odoo import models, fields, api, _
 from lxml import etree
 import json
 
@@ -17,11 +17,11 @@ class res_users(models.Model):
             users = [self.env.user]
 
         for user in users:
-            print 'Recalculating user:', user.id, user.name
+            print('Recalculating user:', user.id, user.name)
             ids_to_write = []
             segment_company_all_ids = {}
             segment_company_open_ids = {}
-            print 'segments:', [i.segment_id.id for i in user.segment_ids]
+            print('segments:', [i.segment_id.id for i in user.segment_ids])
             for s in user.segment_ids:
                 if not s.company_id.id in segment_company_all_ids:
                     segment_company_all_ids[s.company_id.id] = []
@@ -61,8 +61,8 @@ class res_users(models.Model):
             for segment in segment_company_all_ids.values():
                 ids_to_write += segment
 
-            print 1, segment_company_all_ids
-            print 2, segment_company_open_ids
+            print(1, segment_company_all_ids)
+            print(2, segment_company_open_ids)
             #print 2, ids_to_write
 
             #user_segments = [i.id for i in user.segment_segment_ids]

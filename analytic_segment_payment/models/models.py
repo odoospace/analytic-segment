@@ -1,11 +1,11 @@
 # -*- coding: utf-8 -*-
 # More simple segment model to use in odoo analytic and no analytic objects
 
-from openerp import SUPERUSER_ID
-from openerp import models, fields, api, _
-from openerp.exceptions import ValidationError, Warning
-from openerp.tools import float_compare
-from openerp.osv import osv
+from odoo import SUPERUSER_ID
+from odoo import models, fields, api, _
+from odoo.exceptions import ValidationError, Warning
+from odoo.tools import float_compare
+from odoo.osv import osv
 import time
 import calendar
 from datetime import datetime
@@ -77,11 +77,11 @@ class PaymentLine(models.Model):
         if self.env.user.id == 1:
             domain = []
         else:
-            print '+++', self.env.user.segment_by_company_open
+            print('+++', self.env.user.segment_by_company_open)
             segment_by_company_open = json.loads(self.env.user.segment_by_company_open)[str(self.env.user.company_id.id)]
-            print '_domain_segment', self.env.user.company_id.id, segment_by_company_open
+            print('_domain_segment', self.env.user.company_id.id, segment_by_company_open)
             domain = [('id', 'in', segment_by_company_open)]
-        print '>>> domains:', domain
+        print('>>> domains:', domain)
         return domain
 
     def _get_default_segment_from_user(self):

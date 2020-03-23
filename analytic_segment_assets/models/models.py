@@ -1,11 +1,11 @@
 # -*- coding: utf-8 -*-
 # More simple segment model to use in odoo analytic and no analytic objects
 
-from openerp import SUPERUSER_ID
-from openerp import models, fields, api, _
-from openerp.exceptions import ValidationError, Warning
-from openerp.tools import float_compare
-from openerp.osv import osv
+from odoo import SUPERUSER_ID
+from odoo import models, fields, api, _
+from odoo.exceptions import ValidationError, Warning
+from odoo.tools import float_compare
+from odoo.osv import osv
 import time
 import calendar
 from datetime import datetime

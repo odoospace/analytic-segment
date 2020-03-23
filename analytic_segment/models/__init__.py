@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-import models
-import base
-import analytic
-import account
+from . import models
+from . import base
+from . import analytic
+from . import account
