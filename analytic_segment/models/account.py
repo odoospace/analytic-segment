@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 # use analytic_segment with analytic accounts
 
-from openerp import models, fields, api, _
+from odoo import models, fields, api, _
 from odoo.exceptions import ValidationError, Warning
 from odoo.tools import float_compare
 from odoo.osv import osv
