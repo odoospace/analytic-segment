@@ -23,8 +23,8 @@
 
     # always loaded
     'data': [
-        'views/templates.xml',
-        'security/security.xml'
+        # 'views/templates.xml',
+        # 'security/security.xml'
     ],
     # only loaded in demonstration mode
     #'demo': [
