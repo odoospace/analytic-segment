@@ -19,14 +19,14 @@
     'category': 'Uncategorized',
     'version': '8.0.13.3',
     # any module necessary for this one to work correctly
-    'depends': ['base', 'account', 'universal_account', 'account_budget', 'analytic'],
+    'depends': ['base', 'account', 'account_budget', 'analytic'],
 
     # always loaded
     'data': [
-        'security/ir.model.access.csv',
-        'views/templates.xml',
-        'security/security.xml',
-        'cron.xml',
+        # 'security/ir.model.access.csv',
+        # 'views/templates.xml',
+        # 'security/security.xml',
+        # 'cron.xml',
     ],
     # only loaded in demonstration mode
     #'demo': [
