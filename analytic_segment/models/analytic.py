@@ -47,20 +47,32 @@ class AccountAnalyticLine(models.Model):
 class account_analytic_account(models.Model):
     _inherit = 'account.analytic.account'
 
-    def name_get(self, cr, uid, ids, context=None):
+    # def name_get(self, cr, uid, ids, context=None):
+    #     res = []
+    #     if not ids:
+    #         return res
+    #     if isinstance(ids, (int, long)):
+    #         ids = [ids]
+    #     for id in ids:
+    #         item = self.browse(cr, uid, id, context=context)
+    #         segment = item.segment and '.' in item.segment and item.segment.split('.')[1] or 'NN'
+    #         try:
+    #             res.append((id, '%s - %s' % (segment, self._get_one_full_name(item))))
+    #         except:
+    #             # TODO: to use an exception definition
+    #             pass
+    #     return res
+
+    @api.multi
+    def name_get(self):
         res = []
-        if not ids:
-            return res
-        if isinstance(ids, (int, long)):
-            ids = [ids]
-        for id in ids:
-            item = self.browse(cr, uid, id, context=context)
-            segment = item.segment and '.' in item.segment and item.segment.split('.')[1] or 'NN'
-            try:
-                res.append((id, '%s - %s' % (segment, self._get_one_full_name(item))))
-            except:
-                # TODO: to use an exception definition
-                pass
+        for analytic in self:
+            name = analytic.name
+            if analytic.code:
+                name = '['+analytic.code+'] '+name
+            if analytic.partner_id:
+                name = analytic.segment +' - ' + name +' - '+analytic.partner_id.commercial_partner_id.name
+            res.append((analytic.id, name))
         return res
 
     def _search_segment_user(self, operator, value):
