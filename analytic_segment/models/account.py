@@ -5,7 +5,6 @@ from odoo import models, fields, api, _
 from odoo.exceptions import ValidationError, Warning
 from odoo.tools import float_compare
 from odoo.osv import osv
-from odoo import workflow
 import json
 import time
 
