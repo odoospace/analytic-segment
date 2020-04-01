@@ -1,6 +1,6 @@
 # analytic-segment
 
-Odoo 10.0 repository to hold analytic-segment modules.
+Odoo 12.0 repository to hold analytic-segment modules.
 
 Analytic segment adds to Odoo accounting a new layer of analytc analysis based in a tree hierarchy.
 
