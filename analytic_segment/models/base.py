@@ -97,8 +97,8 @@ class res_company(models.Model):
     segment_ids = fields.Many2many('analytic_segment.segment', 'segment_company_rel', string='Segments')
     #campaign_ids = fields.One2many('analytic_segment.campaign', 'company_id')
 
-    def fields_view_get(self, cr, uid, view_id=None, view_type='form', context=None, toolbar=False, submenu=False):
-        res = models.Model.fields_view_get(self, cr, uid, view_id=view_id, view_type=view_type, context=context, toolbar=toolbar, submenu=submenu)
-        if view_type == 'form':
-            res['arch'] = res['arch'].replace('<sheet>', '').replace('</sheet>', '')
-        return res
+    # def fields_view_get(self, cr, uid, view_id=None, view_type='form', context=None, toolbar=False, submenu=False):
+    #     res = models.Model.fields_view_get(self, cr, uid, view_id=view_id, view_type=view_type, context=context, toolbar=toolbar, submenu=submenu)
+    #     if view_type == 'form':
+    #         res['arch'] = res['arch'].replace('<sheet>', '').replace('</sheet>', '')
+    #     return res
