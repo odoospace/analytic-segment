@@ -19,7 +19,7 @@
     'category': 'Uncategorized',
     'version': '8.0.1.11',
     # any module necessary for this one to work correctly
-    'depends': ['base', 'account', 'analytic_segment', 'account_asset'],
+    'depends': ['base', 'account', 'analytic_segment'],
 
     # always loaded
     'data': [
