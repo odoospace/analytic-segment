@@ -19,7 +19,7 @@
     'category': 'Uncategorized',
     'version': '8.0.13.3',
     # any module necessary for this one to work correctly
-    'depends': ['base', 'account', 'account_budget', 'analytic'],
+    'depends': ['base', 'account', 'analytic'],
 
     # always loaded
     'data': [
